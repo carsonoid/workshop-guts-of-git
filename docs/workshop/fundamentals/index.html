@@ -1,0 +1,486 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Fundamentals # Let&rsquo;s get started already! This page will walk you step by step through some very basic git commands. While the commands themselves may not be anything new or special to you, we will be diving into the guts of git and what each command is actually doing inside the repo.
+Next Creating a New Repository # It&rsquo;s time to start by making an empty Git repository. We do this by making a directory, chaning into it, and using git init"><meta name=theme-color content="#FFFFFF"><meta name=color-scheme content="light dark"><meta property="og:title" content="Git Fundamentals"><meta property="og:description" content="Fundamentals # Let&rsquo;s get started already! This page will walk you step by step through some very basic git commands. While the commands themselves may not be anything new or special to you, we will be diving into the guts of git and what each command is actually doing inside the repo.
+Next Creating a New Repository # It&rsquo;s time to start by making an empty Git repository. We do this by making a directory, chaning into it, and using git init"><meta property="og:type" content="article"><meta property="og:url" content="/docs/workshop/fundamentals/"><meta property="article:section" content="docs"><title>Git Fundamentals | Guts of Git</title><link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.7c6380fd01e728e94f281a8906785c4d072a6671885780a78ca39efe3c8ee6dd.css><script defer src=/flexsearch.min.js></script>
+<script defer src=/en.search.min.78166b9d46e23e0ea915cb6887a30b633e7bc4fad10c8b6b9f6fa532271c19ba.js></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><span>Guts of Git</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/workshop/>Workshop</a><ul><li><a href=/docs/workshop/preamble/>Preamble</a></li><li><a href=/docs/workshop/fundamentals/ class=active>Git Fundamentals</a></li><li><input type=checkbox id=section-71509f844a91bb933c38e0973a47eee8 class=toggle>
+<label for=section-71509f844a91bb933c38e0973a47eee8 class="flex justify-between"><a href=/docs/workshop/branching/>Git Branching</a></label><ul><li><a href=/docs/workshop/branching/understanding-remotes/>Understanding Remotes</a></li><li><a href=/docs/workshop/branching/update-with-merge/>Update With Merge</a></li><li><a href=/docs/workshop/branching/update-with-rebase/>Update With Rebase</a></li></ul></li></ul></li><li><a href=/docs/tips/>Bonus Git Tips</a><ul></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Git Fundamentals</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#creating-a-new-repository>Creating a New Repository</a></li><li><a href=#digging-around-in-git>Digging Around in <code>.git</code></a><ul><li><a href=#the-head-file>The <code>HEAD</code> file</a></li><li><a href=#the-config-file>The <code>config</code> file</a></li><li><a href=#scaffolded-directories>Scaffolded directories</a></li></ul></li><li><a href=#start-the-repo>Start the repo</a><ul><li><a href=#a-cursory-check>A Cursory Check</a></li><li><a href=#check-the-files>Check the files</a><ul><li><a href=#the-object-file>The object file</a></li><li><a href=#the-index-file>The index file</a></li></ul></li><li><a href=#add-more-content>Add More Content</a><ul><li><a href=#dig-deeper>Dig Deeper</a></li></ul></li></ul></li><li><a href=#commit>Commit</a><ul><li><a href=#dig-deeper-1>Dig Deeper</a><ul><li><a href=#the-commit-object>The commit object</a><ul><li><a href=#show-the-commit-object>Show the commit object</a></li></ul></li><li><a href=#the-root-tree-object>The root tree object</a></li><li><a href=#the-nested-tree-object>The nested tree object</a></li></ul></li><li><a href=#other-changes>Other Changes</a><ul><li><a href=#object-files>Object Files</a></li><li><a href=#non-object-files>Non-Object Files</a></li></ul></li></ul></li><li><a href=#another-commit>Another Commit</a><ul><li><a href=#parent-pointers>Parent Pointers</a></li></ul></li><li><a href=#tags>Tags</a><ul><li><a href=#git-log-decorations><code>git log</code> decorations</a></li></ul></li><li><a href=#topic-branches>Topic Branches</a><ul><li><a href=#create-a-branch>Create A Branch</a></li><li><a href=#commit-to-topic>Commit to <code>topic</code></a></li><li><a href=#current-diagram>Current Diagram</a></li></ul></li><li><a href=#diverging-the-main-branch>Diverging the <code>main</code> branch</a></li><li><a href=#unifying-the-branches>Unifying the branches</a></li><li><a href=#branch-merging>Branch Merging</a></li><li><a href=#branch-merging-1>Branch Merging</a><ul><li><a href=#the-log>The log</a></li><li><a href=#the-merge-commit>The &ldquo;merge commit&rdquo;</a></li></ul></li><li><a href=#wrapping-up>Wrapping Up</a></li></ul></nav></aside></header><article class=markdown><h1 id=fundamentals>Fundamentals
+<a class=anchor href=#fundamentals>#</a></h1><p>Let&rsquo;s get started already! This page will walk you step by step through some
+very basic git commands. While the commands themselves may not be anything new
+or special to you, we will be diving into the guts of <code>git</code> and what each command
+is actually doing inside the repo.</p><a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=creating-a-new-repository>Creating a New Repository
+<a class=anchor href=#creating-a-new-repository>#</a></h2><p>It&rsquo;s time to start by making an empty Git repository. We do this by making
+a directory, chaning into it, and using <code>git init</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir ~/gitrepo
+</span></span><span style=display:flex><span>cd ~/gitrepo
+</span></span><span style=display:flex><span>git init
+</span></span></code></pre></div><p>Ok, neat&mldr; so what did we actually do by when we ran <code>git init</code>? The truth is: not much!</p><p>That&rsquo;s right, all that actually happened was that <code>git</code> created a bunch of files and directories for us. It didn&rsquo;t need a server, it didn&rsquo;t need credentials, it didn&rsquo;t even need the network at all.</p><blockquote><p>Basically all that we did was get a <code>.git</code> directory created with some basic files in it.</p></blockquote><p>You can see the contents pretty easily using something like the <code>tree</code> command</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── branches/
+</span></span><span style=display:flex><span>├── config
+</span></span><span style=display:flex><span>├── description
+</span></span><span style=display:flex><span>├── HEAD
+</span></span><span style=display:flex><span>├── hooks/
+</span></span><span style=display:flex><span>│   ├── applypatch-msg.sample*
+</span></span><span style=display:flex><span>│   ├── commit-msg.sample*
+</span></span><span style=display:flex><span>│   ├── fsmonitor-watchman.sample*
+</span></span><span style=display:flex><span>│   ├── post-update.sample*
+</span></span><span style=display:flex><span>│   ├── pre-applypatch.sample*
+</span></span><span style=display:flex><span>│   ├── pre-commit.sample*
+</span></span><span style=display:flex><span>│   ├── pre-merge-commit.sample*
+</span></span><span style=display:flex><span>│   ├── prepare-commit-msg.sample*
+</span></span><span style=display:flex><span>│   ├── pre-push.sample*
+</span></span><span style=display:flex><span>│   ├── pre-rebase.sample*
+</span></span><span style=display:flex><span>│   ├── pre-receive.sample*
+</span></span><span style=display:flex><span>│   ├── push-to-checkout.sample*
+</span></span><span style=display:flex><span>│   └── update.sample*
+</span></span><span style=display:flex><span>├── info/
+</span></span><span style=display:flex><span>│   └── exclude
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex><span>│   ├── info/
+</span></span><span style=display:flex><span>│   └── pack/
+</span></span><span style=display:flex><span>└── refs/
+</span></span><span style=display:flex><span>    ├── heads/
+</span></span><span style=display:flex><span>    └── tags/
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=digging-around-in-git>Digging Around in <code>.git</code>
+<a class=anchor href=#digging-around-in-git>#</a></h2><p>Now that we have an empty repo, let&rsquo;s poke around a bit</p><h3 id=the-head-file>The <code>HEAD</code> file
+<a class=anchor href=#the-head-file>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/HEAD
+</span></span></code></pre></div><p>What do you see? For modern versions of <code>git</code> you actually will find very little in this file</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>ref: refs/heads/main
+</span></span></code></pre></div><h3 id=the-config-file>The <code>config</code> file
+<a class=anchor href=#the-config-file>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/config
+</span></span></code></pre></div><p>Another fairly simple file. Look closely and you will notice it&rsquo;s a fairly basic format. And a new repo typically has
+very little in this file:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>[core]
+</span></span><span style=display:flex><span>	repositoryformatversion = 0
+</span></span><span style=display:flex><span>	filemode = true
+</span></span><span style=display:flex><span>	bare = false
+</span></span><span style=display:flex><span>	logallrefupdates = true
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=scaffolded-directories>Scaffolded directories
+<a class=anchor href=#scaffolded-directories>#</a></h3><p>You will notice a few pre-created sub-directories under <code>objects</code> and <code>refs</code>. We will come back to these.</p><p>There is also a <code>hooks</code> directory that we will not cover at all here.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>│   # ...
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex><span>│   ├── info/
+</span></span><span style=display:flex><span>│   └── pack/
+</span></span><span style=display:flex><span>└── refs/
+</span></span><span style=display:flex><span>    ├── heads/
+</span></span><span style=display:flex><span>    └── tags/
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=start-the-repo>Start the repo
+<a class=anchor href=#start-the-repo>#</a></h2><p>The next thing we are going to do is start the repo:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>echo <span style=color:#e6db74>&#34;# My Git Repository&#34;</span> &gt; README.md
+</span></span><span style=display:flex><span>git add README.md
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=a-cursory-check>A Cursory Check
+<a class=anchor href=#a-cursory-check>#</a></h3><p>You might be used to seeing something like this at this point:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git status
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>$ git status
+</span></span><span style=display:flex><span>On branch main
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>No commits yet
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Changes to be committed:
+</span></span><span style=display:flex><span>  (use &#34;git rm --cached &lt;file&gt;...&#34; to unstage)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	new file:   README.md
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=check-the-files>Check the files
+<a class=anchor href=#check-the-files>#</a></h3><p>What did that <code>git add</code> do? And how does <code>git status</code> know that there is a new file?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── index
+</span></span><span style=display:flex><span>├── ... # omitted for space
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex><span>│   ├── 88/
+</span></span><span style=display:flex><span>│   │   └── cbae6fb9b1ab364976238c1eb6871093ed3860
+</span></span><span style=display:flex><span>│   ├── info
+</span></span><span style=display:flex><span>│   └── pack
+</span></span><span style=display:flex><span>└── refs
+</span></span><span style=display:flex><span>    ├── heads
+</span></span><span style=display:flex><span>    └── tags
+</span></span></code></pre></div><blockquote><p>Assuming you ran the exact files, you will always get this exact file put into <code>.git</code></p></blockquote><p>There are two things to note in this output. The <code>index</code> file and the new <code>object</code> file.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-object-file>The object file
+<a class=anchor href=#the-object-file>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex><span>│   ├── 88/
+</span></span><span style=display:flex><span>│   │   └── cbae6fb9b1ab364976238c1eb6871093ed3860
+</span></span></code></pre></div><p>We can dig into this file ourselves by using the <code>cat-file</code> sub-command.</p><ul><li>The <code>-p</code> tells <code>cat-file</code> to guess the object type and pretty-print accordingly.</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p  88cbae6fb9b1ab364976238c1eb6871093ed3860
+</span></span></code></pre></div><p>In our case there is not much special here. What we see is just the exact content of the file we have staged:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span># My Git Repository
+</span></span></code></pre></div><blockquote class="book-hint warning"><p><strong>This is still a big deal!</strong></p><p>This is one huge design aspect of git that you should internalize:</p><blockquote><p>Git stores every version of every file in it&rsquo;s object database</p></blockquote></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-index-file>The index file
+<a class=anchor href=#the-index-file>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── index
+</span></span></code></pre></div><p>This file is where <code>git</code> is now tracking the current state of your repo. This is
+how it knows that you stagged a <code>README.md</code> to be commited. But just knowing that the repo is staged
+isn&rsquo;t quite enough. While this file is really only ever read by <code>git status</code> you can also manually query
+it for data:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git ls-files --stage
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>100644 88cbae6fb9b1ab364976238c1eb6871093ed3860 0	README.md
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=add-more-content>Add More Content
+<a class=anchor href=#add-more-content>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir assets
+</span></span><span style=display:flex><span>curl -Lo assets/gopher.png <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>   https://go.dev/doc/gopher/doc.png
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git add assets
+</span></span></code></pre></div><p>So this isn&rsquo;t that much different then what we did before. Except that we are
+adding a non-text file to the repo. Again, we can check the result:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git status
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>On branch main
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>No commits yet
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Changes to be committed:
+</span></span><span style=display:flex><span>  (use &#34;git rm --cached &lt;file&gt;...&#34; to unstage)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	new file:   README.md
+</span></span><span style=display:flex><span>	new file:   assets/gopher.png
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=dig-deeper>Dig Deeper
+<a class=anchor href=#dig-deeper>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div><p>Now, we can see another new object file alongside our other one. Like the first
+file, you should have this exact same object with the same hash in your <code>.git</code>.</p><p>That is because this file has the same content for everyone and all objects in git
+are stored by content hash!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── ... # omitted for space
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex><span>│   ├── 88/
+</span></span><span style=display:flex><span>│   │   └── cbae6fb9b1ab364976238c1eb6871093ed3860
+</span></span><span style=display:flex><span>│   ├── e1/
+</span></span><span style=display:flex><span>│   │   └── 5a3234d5d2c87e4e6afc226d971e8ab0c65d2b
+</span></span><span style=display:flex><span>│   ├── info
+</span></span><span style=display:flex><span>│   └── pack
+</span></span><span style=display:flex><span>└── refs/
+</span></span><span style=display:flex><span>    ├── heads/
+</span></span><span style=display:flex><span>    └── tags/
+</span></span></code></pre></div><p>But what is inside it?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b |head -n1
+</span></span></code></pre></div><p>Again, the whole file! This is a binary file so our test command only shows one line
+but you can see that the first line shows us that it is a <code>PNG</code> image</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>�PNG
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=commit>Commit
+<a class=anchor href=#commit>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;Initial Add&#34;</span>
+</span></span><span style=display:flex><span>git log
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199 (HEAD -&gt; main)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><p>You can see that the log now shows us the commit we made, along with relevent
+information about the commit.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=dig-deeper-1>Dig Deeper
+<a class=anchor href=#dig-deeper-1>#</a></h3><p>So, what happened to our <code>.git</code>?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span><span style=display:flex><span>├── ... # omitted for space
+</span></span><span style=display:flex><span>├── objects/
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   ├── 10/
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   │   └── 76d1da17d464ae87160a3dd2519cd0f64f3cd5
+</span></span><span style=display:flex><span>│   ├── 88/
+</span></span><span style=display:flex><span>│   │   └── cbae6fb9b1ab364976238c1eb6871093ed3860
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   ├── a5/
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   │   └── c3a3648323f431095a32f4f5ea86885820b80a
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   ├── c7/
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   │   └── 1366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>│   ├── e1/
+</span></span><span style=display:flex><span>│   │   └── 5a3234d5d2c87e4e6afc226d971e8ab0c65d2b
+</span></span><span style=display:flex><span>│   ├── info/
+</span></span><span style=display:flex><span>│   └── pack/
+</span></span><span style=display:flex><span>└── refs/
+</span></span><span style=display:flex><span>    ├── heads/
+</span></span><span style=display:flex><span>    │   └── main
+</span></span><span style=display:flex><span>    └── tags/
+</span></span></code></pre></div><p>Interestingly, that one command actually generated 3 new objects. Even though
+we haven&rsquo;t actually added new content to the repo.</p><blockquote class="book-hint warning"><strong>Your new objects will likely have different filenames</strong>
+Until now, we have all had the same objects. But your commit likely generated 3
+objects with different content and thus different hashes</blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-commit-object>The commit object
+<a class=anchor href=#the-commit-object>#</a></h4><p>One of the 3 new files is the commit object. Git takes our commit information, builds a file and
+then hashes the content of that file and stores it as an object.</p><p>But wait, which of the 3 new objects is our commit object? Well, we can tell what it is one of two ways:</p><ol><li>We can get the commit object hash by looking at the log</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199 (HEAD -&gt; main) Initial Add
+</span></span></code></pre></div><ol start=2><li>We can get the commit object hash by looking at the content of <code>.git/refs/heads/main</code><blockquote><p>We will talk more about this file later</p></blockquote></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h5 id=show-the-commit-object>Show the commit object
+<a class=anchor href=#show-the-commit-object>#</a></h5><p>Now, no matter how we got that hash, we can now ask git to show us
+the raw content of the object as before.</p><p>You can build this command yourself:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p &lt;hashhere&gt;
+</span></span></code></pre></div><p>Or let the shell do it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>tree a5c3a3648323f431095a32f4f5ea86885820b80a
+</span></span><span style=display:flex><span>author Carson Anderson &lt;user@email&gt; 1666555792 -0600
+</span></span><span style=display:flex><span>committer Carson Anderson &lt;user@email&gt; 1666555792 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Initial add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-root-tree-object>The root tree object
+<a class=anchor href=#the-root-tree-object>#</a></h4><p>Now, let&rsquo;s dig in on the tree object. We already know it&rsquo;s hash because it was
+in the output of the previous command.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p &lt;treehashhere&gt;
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>100644 blob 88cbae6fb9b1ab364976238c1eb6871093ed3860	README.md
+</span></span><span style=display:flex><span>040000 tree 1076d1da17d464ae87160a3dd2519cd0f64f3cd5	assets
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-nested-tree-object>The nested tree object
+<a class=anchor href=#the-nested-tree-object>#</a></h4><p>Just like before, we can show the subtree:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p &lt;nestedtreehash&gt;
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>100644 blob e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b	gopher.png
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=other-changes>Other Changes
+<a class=anchor href=#other-changes>#</a></h3><p>Along with adding the new objects we can also see that a few
+file has been created in the <code>refs</code> directory</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
+</span></span><span style=display:flex><span>├── heads/
+</span></span><span style=display:flex><span>│   └── main
+</span></span><span style=display:flex><span>└── tags/
+</span></span></code></pre></div><p>If we <code>cat</code> that file we can see that it is actually very simple</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
+</span></span></code></pre></div><p>We can use <code>cat-file</code> to show us exactly what this hash matches</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>tree a5c3a3648323f431095a32f4f5ea86885820b80a
+</span></span><span style=display:flex><span>author Carson Anderson &lt;user@email&gt; 1666555792 -0600
+</span></span><span style=display:flex><span>committer Carson Anderson &lt;user@email&gt; 1666555792 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Initial add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=object-files>Object Files
+<a class=anchor href=#object-files>#</a></h4><p>Nearly everything in Git is an object</p><figure><img src=git-objects.png></figure><p>Even in our trivial repo we can see that we are already building a fairly large
+<code>.git/objects</code> directory.</p><blockquote><p>This directory may contain as many files as you expect if you look at it in a &ldquo;real&rdquo; repo
+This is because git does garbage collection and actually packs multiple files into single &ldquo;pack&rdquo; files
+to help reduce the number of tiny files it creates.</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=non-object-files>Non-Object Files
+<a class=anchor href=#non-object-files>#</a></h4><p>So what isn&rsquo;t an object?</p><ul><li>Branches</li><li>Tags</li></ul><p>As we have already seen, all the files in <code>.git/refs</code> are not objects but instead are simply
+pointers to commit objects.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=another-commit>Another Commit
+<a class=anchor href=#another-commit>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch api
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has an API&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add api&#34;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (HEAD -&gt; main)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add api
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=parent-pointers>Parent Pointers
+<a class=anchor href=#parent-pointers>#</a></h3><p>We can now have git show us the latest commit content as before</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>tree d3d6344e952d73a8f8a33cab518ef1a1b13d44c7
+</span></span><span style=display:flex;background-color:#3c3d38><span>parent c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>author Carson Anderson &lt;user@email&gt; 1666556628 -0600
+</span></span><span style=display:flex><span>committer Carson Anderson &lt;user@email&gt; 1666556628 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>feat: add api
+</span></span></code></pre></div><p>Now we are starting to build a proper, if short, git commit tree</p><script src=/mermaid.min.js></script>
+<script>mermaid.initialize({flowchart:{useMaxWidth:!0},theme:"default"})</script><p class=mermaid>flowchart RL
+8dacb8a --> 8f03199</p><p>Or:</p><p class=mermaid>flowchart RL
+8f03199["feat: add api"] --> 8dacb8a["Initial add"]</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=tags>Tags
+<a class=anchor href=#tags>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git tag v0.0.1
+</span></span></code></pre></div><p>Now we can see that all we did was make a new tag file in <code>.git/refs/tags</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
+</span></span><span style=display:flex><span>├── heads/
+</span></span><span style=display:flex><span>│   └── main
+</span></span><span style=display:flex><span>└── tags/
+</span></span><span style=display:flex;background-color:#3c3d38><span>    └── v0.0.1
+</span></span></code></pre></div><p>The content is the exact same as our <code>refs/heads/main</code> ref</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>head .git/refs/*/*
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>==&gt; .git/refs/heads/main &lt;==
+</span></span><span style=display:flex><span>5b8b4cf7db77f140bd16de41fb541725c8dacb8a
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>==&gt; .git/refs/tags/v0.0.1 &lt;==
+</span></span><span style=display:flex><span>5b8b4cf7db77f140bd16de41fb541725c8dacb8a
+</span></span></code></pre></div><details><summary>Does this mean you could create a new branch or tag by hand?</summary><div class=markdown-inner><h2 id=sort-of>Sort of!
+<a class=anchor href=#sort-of>#</a></h2><p>In it&rsquo;s simplest form, yes! Although as a rule, you shouldn&rsquo;t edit files in <code>.git</code> other than the config.</p><p>In this case you could quite easily
+accidentlly create a branch or tag that points to a bad target. But it <em>is</em> possible:</p><p>You can try it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>echo 5b8b4cf7db77f140bd16de41fb541725c8dacb8a &gt; .git/refs/tags/manual-tag
+</span></span><span style=display:flex><span>git tag
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>manual-tag
+</span></span><span style=display:flex><span>v0.0.1
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>echo 5b8b4cf7db77f140bd16de41fb541725c8dacb8a &gt; .git/refs/heads/manual-branch
+</span></span><span style=display:flex><span>git branch -a
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>main
+</span></span><span style=display:flex><span>manual-tag
+</span></span></code></pre></div></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=git-log-decorations><code>git log</code> decorations
+<a class=anchor href=#git-log-decorations>#</a></h3><p>Now that we have to different files in <code>refs/heads</code> pointing at a commit. You can
+see that <code>git log</code> uses that data to decorate the log.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (HEAD -&gt; main, tag: v0.0.1)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add api
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=topic-branches>Topic Branches
+<a class=anchor href=#topic-branches>#</a></h2><p>This is all well and good. But anyone who has used source code systems know
+that the ability to collaborate or work on multiple things at once is
+where these systems shine (or not!)</p><p>We already know that one defining attribute of <code>git</code> is that everything is stored
+by content in <code>.git/objects</code> The other defining attribute is that creating a
+branch it git is <strong>easy</strong> and <strong>cheap</strong>!</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=create-a-branch>Create A Branch
+<a class=anchor href=#create-a-branch>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout -b topic
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs/
+</span></span><span style=display:flex><span>├── heads/
+</span></span><span style=display:flex><span>│   ├── main
+</span></span><span style=display:flex;background-color:#3c3d38><span>│   └── topic
+</span></span><span style=display:flex><span>└── tags/
+</span></span><span style=display:flex><span>    └── v0.0.1
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=commit-to-topic>Commit to <code>topic</code>
+<a class=anchor href=#commit-to-topic>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch users
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has Users&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add users&#34;</span>
+</span></span></code></pre></div><p>Now let&rsquo;s inspect it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div><p>Notice two things</p><ol><li>The <code>head -> topic</code> decoration has moved with our new commit</li><li>The <code>tag: v0.0.1,</code> and <code>main</code> decorations are still attached to the previous commit</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>commit 60f4c94a3c4f7af884bdd8d5726fbbca8cdcbdae (HEAD -&gt; topic)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:42:37 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add users
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex;background-color:#3c3d38><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (tag: v0.0.1, main)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add api
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=current-diagram>Current Diagram
+<a class=anchor href=#current-diagram>#</a></h3><p>Now we are starting to see something more interesting. We can see that we have
+started work on a new branch. We can of course walk back from the latest commit
+in our branch all the way to the first commit to <code>main</code></p><p>In a simple diagram flow it looks like this:</p><p class=mermaid>flowchart RL
+8dacb8a["feat: add users"] --> 8f03199["feat: add api"] --> cdcbdae["Initial add"]</p><p>However, we are going to start making use of a more standardized git graph format.
+In the new format, the current diagram like the one below. It&rsquo;s the same information
+but is much easier to read.</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+branch topic
+commit id: "feat: add users"</p><details><summary>About the git diagrams</summary><div class=markdown-inner><p>The official <a href=https://mermaid.js.org/syntax/gitgraph.html>mermaid gitGraphs</a> shown here
+are easier to read, but it could give you the impression that git can walk forward from
+a commit to tell you all the commits after it. When in reality, this is not how the system works.</p><p>Commits have one or more parents. While you could do a lot of work to try and find all the commits that point to a specific parent, it is not a standard use-case for git and not easy to do</p></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=diverging-the-main-branch>Diverging the <code>main</code> branch
+<a class=anchor href=#diverging-the-main-branch>#</a></h2><p>Now let&rsquo;s go <strong>back</strong> to main and have it make some parallel changes</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout main
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>touch docs.md
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has Docs&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add docs&#34;</span>
+</span></span></code></pre></div><p>We can check the log again.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>commit c2d71219e98d8bbd1240e3aa820b32659ad5045c (HEAD -&gt; main)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:50:12 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add docs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (tag: v0.0.1)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add api
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><p>Notice anything missing?</p><p>The &ldquo;feat: add users&rdquo; commit we created in the <code>topic</code> branch is not shown in <code>main</code></p><p>This does not mean our commit is gone, far from it! It just means that are on a branch where
+our commit chain does not include the commit to <code>topic</code></p><p>As far as our branch is concerned, the parent of <code>feat: add docs</code> is <code>feat: add api</code> and
+it always will be.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=unifying-the-branches>Unifying the branches
+<a class=anchor href=#unifying-the-branches>#</a></h2><p>So now we understand fairly well how commits, tags, and branches work. But our repo now has two branches with two different ideas about the history and content of our repo</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+branch topic
+commit id: "feat: add users"
+checkout main
+commit id: "feat: add docs"</p><p>How do we bring these two heads back together?</p><p>The <a href=../branching>Branching</a> section will cover this in detail but for now
+let&rsquo;s use a simple <code>git merge</code></p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=branch-merging>Branch Merging
+<a class=anchor href=#branch-merging>#</a></h2><p>This is where <code>git merge</code> comes into play. The branching section of the workshop
+will cover this operation and other options in more detail. But for now lets
+do it and see what happens!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout main
+</span></span><span style=display:flex><span>git merge topic
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=branch-merging-1>Branch Merging
+<a class=anchor href=#branch-merging-1>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>Auto-merging README.md
+</span></span><span style=display:flex><span>CONFLICT (content): Merge conflict in README.md
+</span></span><span style=display:flex><span>Automatic merge failed; fix conflicts and then commit the result.
+</span></span></code></pre></div><p>😱 Oh no! The dreaded merge conflict! We will cover these and the details
+around them in the branching section. But the short version is that our two
+branches each have different ideas of what <code>README.md</code> should look like.</p><p><code>git</code> is actually pretty good at reconciling this situation in most cases. But
+in our case, each branch thinks line 3 should have different content and there is
+no clear winner. So Git stops the merge and asks us to solve the problem.</p><p>For now we are going to manually set the content of <code>README.md</code>
+and complete the merge.</p><blockquote><p>You can just save and close the editor prompt that comes up.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat &gt; README.md <span style=color:#e6db74>&lt;&lt;EOL
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># My Git Repository
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>## Has an API
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>## Has Docs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>## Has Users
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOL</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit
+</span></span></code></pre></div><p>This leaves us with a final git state like this:</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+branch topic
+commit id: "feat: add users"
+checkout main
+commit id: "feat: add docs"
+merge topic id: "Merge branch 'topic'"</p><p>Want to know about merging or branching? That will be covered in detail
+in the <a href=../branching>Branching</a> section.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=the-log>The log
+<a class=anchor href=#the-log>#</a></h3><p>Now we can look at our new log for <code>main</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div><p>The output has one line that is specifically interesting. The <code>Merge:</code> line</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>commit 5fb51187efb652c7da6c3366588e4fa8f2ea9535 (HEAD -&gt; main)
+</span></span><span style=display:flex;background-color:#3c3d38><span>Merge: c2d7121 60f4c94
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;email&gt;
+</span></span><span style=display:flex><span>Date:   Sat Mar 11 11:35:33 2023 -0700
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Merge branch &#39;topic&#39;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    # Conflicts:
+</span></span><span style=display:flex><span>    #       README.md
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c2d71219e98d8bbd1240e3aa820b32659ad5045c (HEAD -&gt; main)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:50:12 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add docs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (tag: v0.0.1)
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    feat: add api
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>commit c71366be637024591f202876fbe5224b68f03199
+</span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
+</span></span><span style=display:flex><span>Date:   Sun Oct 23 14:09:52 2022 -0600
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Initial add
+</span></span></code></pre></div><p>This is important to understand. When you merge two branches in git you
+aren&rsquo;t just adding the changes. Your are actually creating a commit
+where you combine the two histories.</p><blockquote><p>We go into more detail later in the <a href=../branching>Branching</a> section.</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=the-merge-commit>The &ldquo;merge commit&rdquo;
+<a class=anchor href=#the-merge-commit>#</a></h3><p>Just like before, let&rsquo;s look at the raw contents of our latest commit</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><p>Notice we now have <strong>two</strong> parent hashes in the commit. This
+is where <code>git log</code> got those short hashes.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>tree 9521bc081dd964a77a02f756bb52892d00379f07
+</span></span><span style=display:flex;background-color:#3c3d38><span>parent 11e86be1b4ae2bee490d8c51bb6dcbb597964f35
+</span></span><span style=display:flex;background-color:#3c3d38><span>parent b94c70770fc56ff85874eaa43165821403bb4729
+</span></span><span style=display:flex><span>author Carson Anderson &lt;email&gt; 1678559733 -0700
+</span></span><span style=display:flex><span>committer Carson Anderson &lt;email&gt; 1678559733 -0700
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Merge branch &#39;topic&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Conflicts:
+</span></span><span style=display:flex><span>#	README.md
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=wrapping-up>Wrapping Up
+<a class=anchor href=#wrapping-up>#</a></h2><p>You should now have a pretty good grasp of the fundamentals of how git operates
+at a low level. Including:</p><ul><li>How git stores files(blob objects) and directories(tree objects)</li><li>How git stores commmits(commit objects)</li><li>How git stores tags and branches (pointer files)</li><li>The basic idea of what git <code>HEAD</code> is for<ul><li>To point to a ref or commit</li></ul></li></ul><p>The next section will use all this information to dive deeper on how branching
+works and how different kinds of branch management strategies.</p><a rel=noopener class="book-btn prevSegment">Next Section</a>
+<a href=../branching class=book-btn style=position:absolute;right:0>Next Section</a><div class=pagebreak></div></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#creating-a-new-repository>Creating a New Repository</a></li><li><a href=#digging-around-in-git>Digging Around in <code>.git</code></a><ul><li><a href=#the-head-file>The <code>HEAD</code> file</a></li><li><a href=#the-config-file>The <code>config</code> file</a></li><li><a href=#scaffolded-directories>Scaffolded directories</a></li></ul></li><li><a href=#start-the-repo>Start the repo</a><ul><li><a href=#a-cursory-check>A Cursory Check</a></li><li><a href=#check-the-files>Check the files</a><ul><li><a href=#the-object-file>The object file</a></li><li><a href=#the-index-file>The index file</a></li></ul></li><li><a href=#add-more-content>Add More Content</a><ul><li><a href=#dig-deeper>Dig Deeper</a></li></ul></li></ul></li><li><a href=#commit>Commit</a><ul><li><a href=#dig-deeper-1>Dig Deeper</a><ul><li><a href=#the-commit-object>The commit object</a><ul><li><a href=#show-the-commit-object>Show the commit object</a></li></ul></li><li><a href=#the-root-tree-object>The root tree object</a></li><li><a href=#the-nested-tree-object>The nested tree object</a></li></ul></li><li><a href=#other-changes>Other Changes</a><ul><li><a href=#object-files>Object Files</a></li><li><a href=#non-object-files>Non-Object Files</a></li></ul></li></ul></li><li><a href=#another-commit>Another Commit</a><ul><li><a href=#parent-pointers>Parent Pointers</a></li></ul></li><li><a href=#tags>Tags</a><ul><li><a href=#git-log-decorations><code>git log</code> decorations</a></li></ul></li><li><a href=#topic-branches>Topic Branches</a><ul><li><a href=#create-a-branch>Create A Branch</a></li><li><a href=#commit-to-topic>Commit to <code>topic</code></a></li><li><a href=#current-diagram>Current Diagram</a></li></ul></li><li><a href=#diverging-the-main-branch>Diverging the <code>main</code> branch</a></li><li><a href=#unifying-the-branches>Unifying the branches</a></li><li><a href=#branch-merging>Branch Merging</a></li><li><a href=#branch-merging-1>Branch Merging</a><ul><li><a href=#the-log>The log</a></li><li><a href=#the-merge-commit>The &ldquo;merge commit&rdquo;</a></li></ul></li><li><a href=#wrapping-up>Wrapping Up</a></li></ul></nav></div></aside></main><script>for(var j,code=document.querySelectorAll("code.language-bash"),parent,style,children,childStyle,nextSegment,prevSegment,i=0;i<code.length;i++)parent=code[i].parentElement,style=parent.getAttribute("style"),style==null&&(style=""),parent.setAttribute("style",style+";font-size: large;border: 1px solid #404239; filter: drop-shadow(0 0 0.5rem #404239);");code=document.querySelectorAll("code.language-txt");for(i=0;i<code.length;i++){parent=code[i].parentElement,style=parent.getAttribute("style"),style==null&&(style=""),parent.setAttribute("style",style+";background-color: #f5f5f5; color: #333"),children=code[i].querySelectorAll("[style]");for(j=0;j<children.length;j++)childStyle=children[j].getAttribute("style"),childStyle.indexOf("background-color")>-1&&(console.log("found background-color"),childStyle=childStyle+";background-color: #ddd; color: #333",children[j].setAttribute("style",childStyle))}nextSegment=document.getElementsByClassName("nextSegment");for(i=0;i<nextSegment.length;i++)nextSegment[i].addEventListener("click",function(){console.log("clicked");for(var e,t=this.nextElementSibling;t;){if(console.log(t),t.classList.contains("pagebreak"))for(e=t.nextElementSibling;e;){if(e.tagName=="H1"||e.tagName=="H2"||e.tagName=="H3"||e.tagName=="H4"||e.tagName=="H5"||e.tagName=="H6"){e.scrollIntoView(),window.location.hash=e.id;return}e=e.nextElementSibling}t=t.nextElementSibling}});prevSegment=document.getElementsByClassName("prevSegment");for(i=0;i<prevSegment.length;i++)prevSegment[i].addEventListener("click",function(){console.log("clicked");for(var e,t=this.previousElementSibling;t;){if(console.log(t),t.classList.contains("pagebreak"))for(e=t.previousElementSibling;e;){if(e.tagName=="H1"||e.tagName=="H2"||e.tagName=="H3"||e.tagName=="H4"||e.tagName=="H5"||e.tagName=="H6"){e.scrollIntoView(),window.location.hash=e.id;return}e=e.previousElementSibling}t=t.previousElementSibling}})</script></body></html>

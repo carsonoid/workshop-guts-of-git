@@ -1,0 +1,534 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Update With Rebase # This section builds on the previous Git Fundamentals section.
+If you have not done that section you should still be able to do all the excercies here since each one starts with a script to get you to a known starting state.
+Back Next Problem: Updating to the latest Main # This will cover a very common situation and help you understand two critical features of git and how they help you solve the problem."><meta name=theme-color content="#FFFFFF"><meta name=color-scheme content="light dark"><meta property="og:title" content="Update With Rebase"><meta property="og:description" content="Update With Rebase # This section builds on the previous Git Fundamentals section.
+If you have not done that section you should still be able to do all the excercies here since each one starts with a script to get you to a known starting state.
+Back Next Problem: Updating to the latest Main # This will cover a very common situation and help you understand two critical features of git and how they help you solve the problem."><meta property="og:type" content="article"><meta property="og:url" content="/docs/workshop/branching/update-with-rebase/"><meta property="article:section" content="docs"><title>Update With Rebase | Guts of Git</title><link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.7c6380fd01e728e94f281a8906785c4d072a6671885780a78ca39efe3c8ee6dd.css><script defer src=/flexsearch.min.js></script>
+<script defer src=/en.search.min.78166b9d46e23e0ea915cb6887a30b633e7bc4fad10c8b6b9f6fa532271c19ba.js></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><span>Guts of Git</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/workshop/>Workshop</a><ul><li><a href=/docs/workshop/preamble/>Preamble</a></li><li><a href=/docs/workshop/fundamentals/>Git Fundamentals</a></li><li><input type=checkbox id=section-71509f844a91bb933c38e0973a47eee8 class=toggle checked>
+<label for=section-71509f844a91bb933c38e0973a47eee8 class="flex justify-between"><a href=/docs/workshop/branching/>Git Branching</a></label><ul><li><a href=/docs/workshop/branching/understanding-remotes/>Understanding Remotes</a></li><li><a href=/docs/workshop/branching/update-with-merge/>Update With Merge</a></li><li><a href=/docs/workshop/branching/update-with-rebase/ class=active>Update With Rebase</a></li></ul></li></ul></li><li><a href=/docs/tips/>Bonus Git Tips</a><ul></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Update With Rebase</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#problem-updating-to-the-latest-main>Problem: Updating to the latest Main</a></li><li><a href=#setup>Setup</a><ul><li><a href=#the-state-of-our-branches>The state of our branches</a></li></ul></li><li><a href=#what-is-going-to-happen>What is going to happen</a></li><li><a href=#start-the-rebase>Start the rebase</a><ul><li><a href=#introducing-limbo>Introducing <code>LIMBO</code></a><ul><li><a href=#limbo-setup><code>LIMBO</code> Setup</a></li></ul></li><li><a href=#rebase-prep>Rebase prep</a></li><li><a href=#apply-the-first-commit-from-limbo>Apply the first commit from <code>LIMBO</code></a><ul><li><a href=#fix-the-first-conflict>Fix the first conflict</a></li></ul></li><li><a href=#apply-the-next-commit-from-limbo>Apply the next commit from <code>LIMBO</code></a><ul><li><a href=#fix-the-next-conflicts>Fix the next conflicts</a></li></ul></li><li><a href=#rebase-summary>Rebase summary</a><ul><li><a href=#rebase-log>Rebase log</a></li></ul></li><li><a href=#rebase-diagrams>Rebase diagrams</a><ul><li><a href=#before-rebase>Before Rebase</a></li><li><a href=#after-rebase>After Rebase</a></li></ul></li><li><a href=#pulling-the-changes-from-topic-to-main>Pulling the changes from <code>topic</code> to <code>main</code></a><ul><li><a href=#the-final-graph-for-main>The final graph for main</a></li></ul></li></ul></li><li><a href=#interactive-rebase>Interactive <code>rebase</code></a><ul><li><a href=#setup-1>Setup</a><ul><li><a href=#view-branch-log>View branch log</a></li></ul></li><li><a href=#cleaning-it-up>Cleaning it up</a><ul><li><a href=#acl-commit-cleanup>&ldquo;acl&rdquo; commit cleanup</a></li><li><a href=#more-rebase-cleanup>More rebase cleanup</a></li><li><a href=#last-rebase-cleanup>Last rebase cleanup</a></li><li><a href=#exercise-all-in-one-cleanup>Exercise: all in one cleanup</a></li></ul></li></ul></li><li><a href=#tip-rebase-during-a-git-pull>TIP: Rebase during a <code>git pull</code></a></li><li><a href=#wrapping-up>Wrapping Up</a></li></ul></nav></aside></header><article class=markdown><h1 id=update-with-rebase>Update With Rebase
+<a class=anchor href=#update-with-rebase>#</a></h1><p>This section builds on the previous <a href=/docs/workshop/fundamentals/>Git Fundamentals</a> section.</p><p>If you have not done that section you should still be able to do all the excercies here since
+each one starts with a script to get you to a known starting state.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=problem-updating-to-the-latest-main>Problem: Updating to the latest Main
+<a class=anchor href=#problem-updating-to-the-latest-main>#</a></h2><p>This will cover a very common situation and help you understand two critical
+features of git and how they help you solve the problem.</p><blockquote><p>Problem: You are working on a repo in a topic(feature) branch and
+while you are doing so, the <code>main</code> branch for the repo gets updated with new
+code. You want to test your new feature alongside the new code.</p></blockquote><p>Now you have two choices to solve this issue and get your branch up to date with
+the latest <code>main</code></p><p>The rest of this pages walks through pulling all the latest code into your branch with <code>git rebase</code></p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=setup>Setup
+<a class=anchor href=#setup>#</a></h2><p>Let&rsquo;s start by setting up our test repo to a known state.</p><details><summary>Show Script</summary><div class=markdown-inner><p>You can simply click in the block below to copy the snippet and paste it into
+a terminal.</p><blockquote><p>WARNING: This will DELETE everything from <code>~/gitrepo</code> if either exists
+Make a backup if you want to keep work from that repo.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bash <span style=color:#e6db74>&lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>set -e
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>rm -rf ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>mkdir -p ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>cd ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git init
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;# My Git Repository&#34; &gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>mkdir assets
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>curl -Lo assets/gopher.png \
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>   https://go.dev/doc/gopher/doc.png
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add assets
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;Initial Add&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>touch api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has an API&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add api&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git tag v0.0.1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git checkout -b topic
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>touch docs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has Docs&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add docs&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;acls&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has ACLs&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add acls&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git checkout main
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>touch users
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has Users&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add users&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;refactored&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## API Refactored&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;refactor: api&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git checkout topic
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;======= Setup success! =======&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;------- topic log -------&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git log topic
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;------- main log -------&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git log main
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cd ~/gitrepo
+</span></span></code></pre></div></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=the-state-of-our-branches>The state of our branches
+<a class=anchor href=#the-state-of-our-branches>#</a></h3><p>Our local branches now look like this:</p><figure><img src=stack-diagrams/s6.png></figure><p>The bottom two commits are greyed out because there is no contention between these two repos
+once they hit the <code>feat: add api</code> commit.</p><blockquote><p>*We won&rsquo;t bother showing the tracking branch in this exercise, but it is still there</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=what-is-going-to-happen>What is going to happen
+<a class=anchor href=#what-is-going-to-happen>#</a></h2><p>A rebase is a lot like a merge. The real difference is the order in which changes are applied.</p><p>Unlike <code>merge</code> our <code>rebase</code> is not going to just make one big commit with every change from the
+target and apply it all at once. Instead we are going to re-apply every commit from our current
+branch and put them on top of the target.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=start-the-rebase>Start the rebase
+<a class=anchor href=#start-the-rebase>#</a></h2><p>Starting a rebase follows the same pattern as <code>merge</code>. Checkout the repo you
+want to update and use <code>git rebase TARGET</code> to apply the target to your
+currently checked out branch:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git rebase main
+</span></span></code></pre></div><blockquote class="book-hint warning"><p>This command will have merge conflicts. We will be addressing the cause
+of this and working through them one at a time.</p><p>Do not to try work through them or resolve them yet.</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=introducing-limbo>Introducing <code>LIMBO</code>
+<a class=anchor href=#introducing-limbo>#</a></h3><p>In order to perform a rebase git is essentially going to take the new commits
+from our current branch and pull them aside. In the diagram below you can see
+them moved to a box called <code>LIMBO</code></p><blockquote><p>This idea of <code>LIMBO</code> is 100% <strong>not</strong> a git thing, git does the actual rebase differently
+but we are going to draw and imagine it differently in this workshop</p></blockquote><figure><img src=stack-diagrams/s11.png></figure><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=limbo-setup><code>LIMBO</code> Setup
+<a class=anchor href=#limbo-setup>#</a></h4><p>Git walks back in the history of both branch and finds the first shared ancestor.</p><p>We are going to imagine that it then moves all the new commits on <strong>our current branch</strong>
+into <code>LIMBO</code></p><figure><img src=stack-diagrams/s12.png></figure><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=rebase-prep>Rebase prep
+<a class=anchor href=#rebase-prep>#</a></h3><p>Now git sets our current branch to match exactly what our target branch looks like.</p><figure><img src=stack-diagrams/s13.png></figure><p>Notice that the two branches are now identical. We just have our new commits
+that still need to be processed</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=apply-the-first-commit-from-limbo>Apply the first commit from <code>LIMBO</code>
+<a class=anchor href=#apply-the-first-commit-from-limbo>#</a></h3><p>Git now applies all the changes from the first commit from <code>LIMBO</code> into our
+new branch state.</p><figure><img src=stack-diagrams/s14.png></figure><p>Notice that the commit is shown in a different color. This is on purpose.</p><p><strong>Because the parent commit has changed, the git commit will be a new hash</strong></p><p>This effectively means that you are rewriting the git history to act like the old commit
+into the repo never happened.</p><p>This can either be a good thing or a bad thing depending on what you want from
+your git history.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=fix-the-first-conflict>Fix the first conflict
+<a class=anchor href=#fix-the-first-conflict>#</a></h4><p>So, because our first commit to the readme that
+conflicts with changes from <code>main</code> we will need to tell git what
+content we want in these files for this first commit</p><p>To resolve:</p><ul><li>Edit the <code>README.md</code> file</li></ul><p>Now we can add them and continue the rebase</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git rebase --continue
+</span></span></code></pre></div><blockquote class="book-hint warning">Expect <strong>another</strong> conflict! This is normal. Continue on to see why</blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=apply-the-next-commit-from-limbo>Apply the next commit from <code>LIMBO</code>
+<a class=anchor href=#apply-the-next-commit-from-limbo>#</a></h3><p>Git then applies the next commit from limbo on top of our current commit.</p><figure><img src=stack-diagrams/s15.png></figure><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=fix-the-next-conflicts>Fix the next conflicts
+<a class=anchor href=#fix-the-next-conflicts>#</a></h4><p>So, because our first commit involves changes to the api and readme that
+both conflict with changes from <code>main</code> we will need to resolve those</p><p>But wait&mldr; didn&rsquo;t we just fix conflicts? Yes we did! But we only fixed the
+conflicts between the state of the repo at start of merge and the first
+commit that was applied.</p><p>This conflict is between the current state of the repo and the changes from
+the current conflict being applied.</p><p>To resolve:</p><ul><li>Edit <code>api</code> file</li><li>Edit the <code>README.md</code> file</li></ul><p>Now we can add them and continue the rebase</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git rebase --continue
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=rebase-summary>Rebase summary
+<a class=anchor href=#rebase-summary>#</a></h3><p>Now our rebase is done and we can see the final version of both branches:</p><figure><img src=stack-diagrams/s16.png></figure><p>Notice something missing? There is no &ldquo;merge commit&rdquo; here! That is because we
+rewrote history and effectively recorded our changes as though they had
+happened directly on the history of <code>main</code></p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=rebase-log>Rebase log
+<a class=anchor href=#rebase-log>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline
+</span></span></code></pre></div><p>You can see that our two commits are simply applied on top of the
+latest commits from <code>main</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>4e926fa11e5948b26a2d7ed22c0c82d4a0fd2ec8 (HEAD -&gt; topic) feat: add acls
+</span></span><span style=display:flex;background-color:#3c3d38><span>708ce3d84b6b749cc19e27859f92467fb0ff0332 feat: add docs
+</span></span><span style=display:flex><span>a116397a8bc43c7f42fb8f3b192add0b5fbcacc9 (main) refactor: api
+</span></span><span style=display:flex><span>c7d22f2b3b1fe579d0220f0a0a62b83780037aa1 feat: add users
+</span></span><span style=display:flex><span>76a04f2486251799139c0c86b106b825830575f5 (tag: v0.0.1) feat: add api
+</span></span><span style=display:flex><span>45ab9223c6b9085a003e604615e1f59913683aef Initial Add
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=rebase-diagrams>Rebase diagrams
+<a class=anchor href=#rebase-diagrams>#</a></h3><p>We can better understanding by visualizing the repo before and after</p><h4 id=before-rebase>Before Rebase
+<a class=anchor href=#before-rebase>#</a></h4><p>You can see where topic and <code>main</code> diverge.</p><script src=/mermaid.min.js></script>
+<script>mermaid.initialize({flowchart:{useMaxWidth:!0},theme:"default"})</script><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+branch topic
+checkout main
+commit id: "feat: add users"
+commit id: "refactor: api"
+checkout topic
+commit id: "feat: add docs"
+commit id: "feat: add acls"</p><h4 id=after-rebase>After Rebase
+<a class=anchor href=#after-rebase>#</a></h4><p>The history of <code>topic</code> is the same as though we just barely
+created topic off the latest <code>main</code> and made our commits</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+commit id: "feat: add users"
+commit id: "refactor: api"
+branch topic
+commit id: "feat: add docs"
+commit id: "feat: add acls"</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=pulling-the-changes-from-topic-to-main>Pulling the changes from <code>topic</code> to <code>main</code>
+<a class=anchor href=#pulling-the-changes-from-topic-to-main>#</a></h3><p>We will now pull our changes from <code>topic</code> back into the main branch. This can also
+be done using <code>rebase</code> with some interesting impacts</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># rebase topic to main</span>
+</span></span><span style=display:flex><span>git checkout main
+</span></span><span style=display:flex><span>git rebase topic
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Log with the graph</span>
+</span></span><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline --graph
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>* 4e926fa11e5948b26a2d7ed22c0c82d4a0fd2ec8 (HEAD -&gt; topic, main) feat: add acls
+</span></span><span style=display:flex><span>* 708ce3d84b6b749cc19e27859f92467fb0ff0332 feat: add docs
+</span></span><span style=display:flex><span>* a116397a8bc43c7f42fb8f3b192add0b5fbcacc9 refactor: api
+</span></span><span style=display:flex><span>* c7d22f2b3b1fe579d0220f0a0a62b83780037aa1 feat: add users
+</span></span><span style=display:flex><span>* 76a04f2486251799139c0c86b106b825830575f5 (tag: v0.0.1) feat: add api
+</span></span><span style=display:flex><span>* 45ab9223c6b9085a003e604615e1f59913683aef Initial Add
+</span></span></code></pre></div><p>So what did we get here? In our case we get clean linear commit history. When
+you use <code>rebase</code> to pull in changes from topic branches you end up with
+a cleaner and simpler git log.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-final-graph-for-main>The final graph for main
+<a class=anchor href=#the-final-graph-for-main>#</a></h4><p>In our case, the graph for is now very simple. Notice that even though
+the last two commits came from <code>topic</code> there is no indication of that
+in the graph or really git at all!</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+gitGraph
+commit id: "Initial add" tag: "v0.0.1"
+commit id: "feat: add api"
+commit id: "feat: add users"
+commit id: "refactor: api"
+commit id: "feat: add docs"
+commit id: "feat: add acls"</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=interactive-rebase>Interactive <code>rebase</code>
+<a class=anchor href=#interactive-rebase>#</a></h2><p>So far <code>rebase</code> may seem to be more work than it is worth. A linear git
+history is nice but may not be that exciting to some.</p><p>Next we are going to cover a super power of <code>rebase</code>: Interactive rebase</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=setup-1>Setup
+<a class=anchor href=#setup-1>#</a></h3><p>Let&rsquo;s start by setting up our test repo to a known state.</p><details><summary>Show Script</summary><div class=markdown-inner><p>You can simply click in the block below to copy the snippet and paste it into
+a terminal.</p><blockquote><p>WARNING: This will DELETE everything from <code>~/gitrepo</code> if either exists
+Make a backup if you want to keep work from that repo.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bash <span style=color:#e6db74>&lt;&lt;EOF
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>set -e
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>rm -rf ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>mkdir -p ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>cd ~/gitrepo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git init
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;# My Git Repository&#34; &gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>mkdir assets
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>curl -Lo assets/gopher.png \
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>   https://go.dev/doc/gopher/doc.png
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add assets
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;Initial Add&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>touch api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has an API&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add api&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git tag v0.0.1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git checkout -b topic
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>touch docs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;## Has Docs&#34; &gt;&gt; README.md
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add docs system&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;docuument feature 1&#34; &gt;&gt; docs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;doc: feaature 1&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;acls&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;feat: add acls&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;document feature 1&#34; &gt;&gt; docs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;fix: doc typo&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;fixed&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;fix: acls&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;fixed1&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;please work&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;fixed2&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;asdf&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;fixed3&#34; &gt;&gt; api
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git add .
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>git commit -m &#34;language X is DUMB! :(&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>echo &#34;======= Setup success! =======&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cd ~/gitrepo
+</span></span></code></pre></div></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=view-branch-log>View branch log
+<a class=anchor href=#view-branch-log>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>9e01a83484bc7428cfec752597162128c2acb27b (HEAD -&gt; topic) language X is DUMB! :(
+</span></span><span style=display:flex><span>d78cb408c690b63f491e757015b33cc98cb1366e asdf
+</span></span><span style=display:flex><span>51dd0c3b6aede0df60274e4a25ab44614b9eddb0 please work
+</span></span><span style=display:flex><span>c11e49190eaadae8c2359dee2a297f7af1ffed66 fix: acls
+</span></span><span style=display:flex><span>936965a84e3312786b19e8bf7e9b656a07654e5e fix: doc typo
+</span></span><span style=display:flex><span>fc0ecdbf66460c758904eb9043a5dd905cfbec0f feat: add acls
+</span></span><span style=display:flex><span>9135c0f138ca3fe61f92b063c0c34f524f947919 doc: feaature 1
+</span></span><span style=display:flex><span>325f6e3202bddfa071ee8ab8963b9132a5b5a183 feat: add docs system
+</span></span><span style=display:flex><span>2dfbd06f94cba98f58a3a626efba10c2198ac86d (tag: v0.0.1, main) feat: add api
+</span></span><span style=display:flex><span>66fa49f6d4c275b2e9b4d3cd2a43c545035394d7 Initial Add
+</span></span></code></pre></div><p>There are some commits here where someone clearly got frustrated! Are we really sure
+that we want to preserve every one of these commits in our git history forever?</p><ul><li>Using <code>merge</code> will, by design, always result in every one of these commits in the
+log forever.</li><li>Using <code>rebase</code> without any args will also keep every commit</li></ul><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=cleaning-it-up>Cleaning it up
+<a class=anchor href=#cleaning-it-up>#</a></h3><p>We want to keep things clean! And <code>rebase -i</code> can help! We just need to run it
+like normal and tell it which branch we want to rebase against.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git rebase -i main
+</span></span></code></pre></div><p>That will result in Git pulling up our default editor with some interesting content:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>pick d77c7d7 feat: add doccs
+</span></span><span style=display:flex><span>pick 3a8449c doc: feature 1
+</span></span><span style=display:flex><span>pick 94039a9 feat: add acls
+</span></span><span style=display:flex><span>pick c5aded7 fix: docs typo
+</span></span><span style=display:flex><span>pick e528e93 fix: acls
+</span></span><span style=display:flex><span>pick 6f9ea51 please work
+</span></span><span style=display:flex><span>pick f7792bd asdf
+</span></span><span style=display:flex><span>pick be0ab5c language X is DUMB! :(
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..be0ab5c onto ae65529 (8 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><blockquote class="book-hint warning"><p><strong>The first time you see this output it the order can be confusing</strong></p><p>If you are using to seeing a <code>git log</code> you would expect the commits to start
+with the most recent and move to the oldest.</p><p>This output shows the same commits as <code>git log</code> but in <strong>reverse order</strong>, meaning
+that the oldest commits are first and the newest are last.</p><p>To help keep you from having to switch between the two types we will use the
+<code>--reverse</code> flag for <code>git log</code> commands from here on out. That will keep
+both outputs the same.</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=acl-commit-cleanup>&ldquo;acl&rdquo; commit cleanup
+<a class=anchor href=#acl-commit-cleanup>#</a></h4><p>We won&rsquo;t cover every option in detail here, but essentially this is
+git giving us a chance to tell exactly how to rewrite our history!</p><p>To change what is going to happen, we simply have to change the content of the file. So,
+for example we can change the 3 acl related commits to start with <code>f</code> instead
+of <code>pick</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>pick d77c7d7 feat: add doccs
+</span></span><span style=display:flex><span>pick 3a8449c doc: feature 1
+</span></span><span style=display:flex><span>pick 94039a9 feat: add acls
+</span></span><span style=display:flex><span>pick c5aded7 fix: docs typo
+</span></span><span style=display:flex;background-color:#3c3d38><span>pick e528e93 fix: acls
+</span></span><span style=display:flex;background-color:#3c3d38><span>f 6f9ea51 please work
+</span></span><span style=display:flex;background-color:#3c3d38><span>f f7792bd asdf
+</span></span><span style=display:flex;background-color:#3c3d38><span>f be0ab5c language X is DUMB! :(
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..be0ab5c onto ae65529 (8 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><p>Now just save and close the file to tell git to continue.</p><p>We can then use <code>git log</code> (with <code>--reverse</code>) to see what happened:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline --reverse
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>66fa49f6d4c275b2e9b4d3cd2a43c545035394d7 Initial Add
+</span></span><span style=display:flex><span>2dfbd06f94cba98f58a3a626efba10c2198ac86d (tag: v0.0.1, main) feat: add api
+</span></span><span style=display:flex><span>325f6e3202bddfa071ee8ab8963b9132a5b5a183 feat: add docs system
+</span></span><span style=display:flex><span>9135c0f138ca3fe61f92b063c0c34f524f947919 doc: feaature 1
+</span></span><span style=display:flex><span>fc0ecdbf66460c758904eb9043a5dd905cfbec0f feat: add acls
+</span></span><span style=display:flex><span>936965a84e3312786b19e8bf7e9b656a07654e5e fix: doc typo
+</span></span><span style=display:flex><span>c92c7938d757625e6463e03a7e932250b9e38752 (HEAD -&gt; topic) fix: acls
+</span></span></code></pre></div><p>You will see that we just combined 4 commits into one! And we told git to
+&ldquo;fixup&rdquo; meaning it only kept the file changes from those 3 ugly commits and
+threw away the messages</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=more-rebase-cleanup>More rebase cleanup
+<a class=anchor href=#more-rebase-cleanup>#</a></h4><p>But wait! We still aren&rsquo;t clean. There is a documentation fix between
+our first acl commit and our initial acl feature add.</p><p>Let&rsquo;s use another feature: re-ordering commits</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git rebase -i main
+</span></span></code></pre></div><p>Now it should look like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>pick d77c7d7 feat: add doccs
+</span></span><span style=display:flex><span>pick 3a8449c doc: feature 1
+</span></span><span style=display:flex><span>pick 94039a9 feat: add acls
+</span></span><span style=display:flex><span>pick c5aded7 fix: doc typo
+</span></span><span style=display:flex><span>pick 4f69143 fix: acls
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..4f69143 onto ae65529 (5 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><p>Go ahead and <em>move</em> the &ldquo;fix: doc typo&rdquo; commit up one line.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>pick d77c7d7 feat: add doccs
+</span></span><span style=display:flex><span>pick 3a8449c doc: feature 1
+</span></span><span style=display:flex;background-color:#3c3d38><span>pick c5aded7 fix: doc typo
+</span></span><span style=display:flex><span>pick 94039a9 feat: add acls
+</span></span><span style=display:flex><span>pick 4f69143 fix: acls
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..4f69143 onto ae65529 (5 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><p>Then you can save and close the file to finalize these changes. Then check
+the log again.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline --reverse
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>66fa49f6d4c275b2e9b4d3cd2a43c545035394d7 Initial Add
+</span></span><span style=display:flex><span>2dfbd06f94cba98f58a3a626efba10c2198ac86d (tag: v0.0.1, main) feat: add api
+</span></span><span style=display:flex><span>325f6e3202bddfa071ee8ab8963b9132a5b5a183 feat: add docs system
+</span></span><span style=display:flex><span>9135c0f138ca3fe61f92b063c0c34f524f947919 doc: feaature 1
+</span></span><span style=display:flex><span>1717a2bc17dce292b18d364f13625cdc2074a3c6 fix: doc typo
+</span></span><span style=display:flex><span>b1f4e150edc4cac6604083a2d5d8937720024906 feat: add acls
+</span></span><span style=display:flex><span>b9702f63d1a1d7039e2c798c0a94440f19038132 (HEAD -&gt; topic) fix: acls
+</span></span></code></pre></div><p>You can see that the two docs related comments are now one after the other!</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=last-rebase-cleanup>Last rebase cleanup
+<a class=anchor href=#last-rebase-cleanup>#</a></h4><p>Ok things are looking better in our history. But let&rsquo;s go further! It&rsquo;s clear that
+there really are only 3 <strong>unique and important</strong> states we want to represent
+with in our branch</p><ol><li>Adding the docs system</li><li>Documenting feature 1</li><li>Adding acls</li></ol><p>Our commits should cleanly represent those states. So let&rsquo;s rebase
+one more time to get things where we want</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git rebase -i main
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>pick 747f7b2 feat: add docs system
+</span></span><span style=display:flex><span>pick bc94f44 doc: feaature 1
+</span></span><span style=display:flex><span>pick 28080d4 fix: docs typo
+</span></span><span style=display:flex><span>pick 3c0816a feat: add acls
+</span></span><span style=display:flex><span>pick 8f5c34c fix: acls
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..8f5c34c onto ae65529 (5 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><p>Now our last update is going to be this:</p><ol><li>Set the last acl commit to <code>fixup</code></li><li>Set the <code>fix: docs type</code> commit to <code>fixup</code></li><li>Set the <code>doc: feaature 1</code> commit to <code>reword</code> so we fix the typo in the message</li></ol><p>Example:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>pick 747f7b2 feat: add docs system
+</span></span><span style=display:flex><span>r bc94f44 doc: feaature 1
+</span></span><span style=display:flex><span>f 28080d4 fix: docs typo
+</span></span><span style=display:flex><span>pick 3c0816a feat: add acls
+</span></span><span style=display:flex><span>f 8f5c34c fix: acls
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Rebase ae65529..8f5c34c onto ae65529 (5 commands)
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># Commands:
+</span></span><span style=display:flex><span># p, pick &lt;commit&gt; = use commit
+</span></span><span style=display:flex><span># r, reword &lt;commit&gt; = use commit, but edit the commit message
+</span></span><span style=display:flex><span># e, edit &lt;commit&gt; = use commit, but stop for amending
+</span></span><span style=display:flex><span># s, squash &lt;commit&gt; = use commit, but meld into previous commit
+</span></span><span style=display:flex><span># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message
+</span></span><span style=display:flex><span># x, exec &lt;command&gt; = run command (the rest of the line) using shell
+</span></span><span style=display:flex><span># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+</span></span><span style=display:flex><span># d, drop &lt;commit&gt; = remove commit
+</span></span><span style=display:flex><span># l, label &lt;label&gt; = label current HEAD with a name
+</span></span><span style=display:flex><span># t, reset &lt;label&gt; = reset HEAD to a label
+</span></span><span style=display:flex><span># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+</span></span><span style=display:flex><span># .       create a merge commit using the original merge commit&#39;s
+</span></span><span style=display:flex><span># .       message (or the oneline, if no original merge commit was
+</span></span><span style=display:flex><span># .       specified). Use -c &lt;commit&gt; to reword the commit message.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># These lines can be re-ordered; they are executed from top to bottom.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># If you remove a line here THAT COMMIT WILL BE LOST.
+</span></span><span style=display:flex><span>#
+</span></span><span style=display:flex><span># However, if you remove everything, the rebase will be aborted.
+</span></span></code></pre></div><p>Now you can save and close the file. You will get a prompt to
+update the commit message for the commit marked as <code>reword</code>. Fix the
+typo and then save and close that file to complete the rebase</p><p>Then we can view our final clean log</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline --reverse
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>66fa49f6d4c275b2e9b4d3cd2a43c545035394d7 Initial Add
+</span></span><span style=display:flex><span>2dfbd06f94cba98f58a3a626efba10c2198ac86d (tag: v0.0.1, main) feat: add api
+</span></span><span style=display:flex><span>325f6e3202bddfa071ee8ab8963b9132a5b5a183 feat: add docs system
+</span></span><span style=display:flex><span>a752ea0228391672e834cfef1fa0c34c11f5c899 doc: feature 1
+</span></span><span style=display:flex><span>e9054cfc916bd62a6974ab65fd2d7ddd3021d6cc (HEAD -&gt; topic) feat: add acls
+</span></span></code></pre></div><p>Notice that we now have exactly 3 commits since <code>main</code> this is a history
+that we can be proud of!</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=exercise-all-in-one-cleanup>Exercise: all in one cleanup
+<a class=anchor href=#exercise-all-in-one-cleanup>#</a></h4><p>We did our cleanup in 3 phases so we could illustrate specific features.</p><p>But it would be completely possible, and normal, to just do all of those cleanups
+in one step. You may want to consider re-running the setup script and
+trying to do all the cleanup in one <code>git rebase -i</code> to see for yourself.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=tip-rebase-during-a-git-pull>TIP: Rebase during a <code>git pull</code>
+<a class=anchor href=#tip-rebase-during-a-git-pull>#</a></h2><p>You can use the <code>--rebase</code> flag for <code>git pull</code> to tell it to fetch the latest
+code and rebase your new changes on top. Without this, the default mode for <code>pull</code>
+is to fetch and merge.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git pull --rebase
+</span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
+<a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=wrapping-up>Wrapping Up
+<a class=anchor href=#wrapping-up>#</a></h2><p>That&rsquo;s it for rebases and the bulk of the workshop. Why not move onto the git tips
+section to learn a few bonus things?</p><a rel=noopener class="book-btn prevSegment">See Tips</a>
+<a href=../../../tips class=book-btn style=position:absolute;right:0>See Tips</a><div class=pagebreak></div></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#problem-updating-to-the-latest-main>Problem: Updating to the latest Main</a></li><li><a href=#setup>Setup</a><ul><li><a href=#the-state-of-our-branches>The state of our branches</a></li></ul></li><li><a href=#what-is-going-to-happen>What is going to happen</a></li><li><a href=#start-the-rebase>Start the rebase</a><ul><li><a href=#introducing-limbo>Introducing <code>LIMBO</code></a><ul><li><a href=#limbo-setup><code>LIMBO</code> Setup</a></li></ul></li><li><a href=#rebase-prep>Rebase prep</a></li><li><a href=#apply-the-first-commit-from-limbo>Apply the first commit from <code>LIMBO</code></a><ul><li><a href=#fix-the-first-conflict>Fix the first conflict</a></li></ul></li><li><a href=#apply-the-next-commit-from-limbo>Apply the next commit from <code>LIMBO</code></a><ul><li><a href=#fix-the-next-conflicts>Fix the next conflicts</a></li></ul></li><li><a href=#rebase-summary>Rebase summary</a><ul><li><a href=#rebase-log>Rebase log</a></li></ul></li><li><a href=#rebase-diagrams>Rebase diagrams</a><ul><li><a href=#before-rebase>Before Rebase</a></li><li><a href=#after-rebase>After Rebase</a></li></ul></li><li><a href=#pulling-the-changes-from-topic-to-main>Pulling the changes from <code>topic</code> to <code>main</code></a><ul><li><a href=#the-final-graph-for-main>The final graph for main</a></li></ul></li></ul></li><li><a href=#interactive-rebase>Interactive <code>rebase</code></a><ul><li><a href=#setup-1>Setup</a><ul><li><a href=#view-branch-log>View branch log</a></li></ul></li><li><a href=#cleaning-it-up>Cleaning it up</a><ul><li><a href=#acl-commit-cleanup>&ldquo;acl&rdquo; commit cleanup</a></li><li><a href=#more-rebase-cleanup>More rebase cleanup</a></li><li><a href=#last-rebase-cleanup>Last rebase cleanup</a></li><li><a href=#exercise-all-in-one-cleanup>Exercise: all in one cleanup</a></li></ul></li></ul></li><li><a href=#tip-rebase-during-a-git-pull>TIP: Rebase during a <code>git pull</code></a></li><li><a href=#wrapping-up>Wrapping Up</a></li></ul></nav></div></aside></main><script>for(var j,code=document.querySelectorAll("code.language-bash"),parent,style,children,childStyle,nextSegment,prevSegment,i=0;i<code.length;i++)parent=code[i].parentElement,style=parent.getAttribute("style"),style==null&&(style=""),parent.setAttribute("style",style+";font-size: large;border: 1px solid #404239; filter: drop-shadow(0 0 0.5rem #404239);");code=document.querySelectorAll("code.language-txt");for(i=0;i<code.length;i++){parent=code[i].parentElement,style=parent.getAttribute("style"),style==null&&(style=""),parent.setAttribute("style",style+";background-color: #f5f5f5; color: #333"),children=code[i].querySelectorAll("[style]");for(j=0;j<children.length;j++)childStyle=children[j].getAttribute("style"),childStyle.indexOf("background-color")>-1&&(console.log("found background-color"),childStyle=childStyle+";background-color: #ddd; color: #333",children[j].setAttribute("style",childStyle))}nextSegment=document.getElementsByClassName("nextSegment");for(i=0;i<nextSegment.length;i++)nextSegment[i].addEventListener("click",function(){console.log("clicked");for(var e,t=this.nextElementSibling;t;){if(console.log(t),t.classList.contains("pagebreak"))for(e=t.nextElementSibling;e;){if(e.tagName=="H1"||e.tagName=="H2"||e.tagName=="H3"||e.tagName=="H4"||e.tagName=="H5"||e.tagName=="H6"){e.scrollIntoView(),window.location.hash=e.id;return}e=e.nextElementSibling}t=t.nextElementSibling}});prevSegment=document.getElementsByClassName("prevSegment");for(i=0;i<prevSegment.length;i++)prevSegment[i].addEventListener("click",function(){console.log("clicked");for(var e,t=this.previousElementSibling;t;){if(console.log(t),t.classList.contains("pagebreak"))for(e=t.previousElementSibling;e;){if(e.tagName=="H1"||e.tagName=="H2"||e.tagName=="H3"||e.tagName=="H4"||e.tagName=="H5"||e.tagName=="H6"){e.scrollIntoView(),window.location.hash=e.id;return}e=e.previousElementSibling}t=t.previousElementSibling}})</script></body></html>
