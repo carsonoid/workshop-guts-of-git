@@ -3,39 +3,21 @@ title: Introduction
 type: docs
 ---
 
-# Acerbo datus maxime
+# Welcome!
 
-{{< columns >}}
-## Astris ipse furtiva
+Here is where I tell you what you will find in this repo
 
-Est in vagis et Pittheus tu arge accipiter regia iram vocatur nurus. Omnes ut
-olivae sensit **arma sorori** deducit, inesset **crudus**, ego vetuere aliis,
-modo arsit? Utinam rapta fiducia valuere litora _adicit cursu_, ad facies
+## What you need
 
-<--->
+* A relatively modern version of git
+  * Older versions should work just fine but you may see `master` instead of `main` in many examples
 
-## Suis quot vota
+## What you do **not** need
 
-Ea _furtique_ risere fratres edidit terrae magis. Colla tam mihi tenebat:
-miseram excita suadent es pecudes iam. Concilio _quam_ velatus posset ait quod
-nunc! Fragosis suae dextra geruntur functus vulgata.
-{{< /columns >}}
+* A git server
+* A GitHub or any other account
 
+## Disclaimers
 
-## Tempora nisi nunc
-
-Lorem **markdownum** emicat gestu. Cannis sol pressit ducta. **Est** Idaei,
-tremens ausim se tutaeque, illi ulnis hausit, sed, lumina cutem. Quae avis
-sequens!
-
-    var panel = ram_design;
-    if (backup + system) {
-        file.readPoint = network_native;
-        sidebar_engine_device(cell_tftp_raster,
-                dual_login_paper.adf_vci.application_reader_design(
-                graphicsNvramCdma, lpi_footer_snmp, integer_model));
-    }
-
-## Locis suis novi cum suoque decidit eadem
-
-Idmoniae ripis, at aves, ali missa adest, ut _et autem_, et ab?
+* Yes, this is basically a different verison of the [git docs](https://git-scm.com/docs) and [pro git book](https://git-scm.com/book/en/v2). Both are excellent data sources, this is just less a comprehensive version of a subset of that information
+* This workshop is full of example commands and outputs. The exact output may change depending on your `git` version but most of the concepts should stay the same.

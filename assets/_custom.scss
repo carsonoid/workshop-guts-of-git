@@ -1,0 +1,33 @@
+/* You can add custom styles here. */
+
+// @import "plugins/numbered";
+// @import "plugins/scrollbars";
+
+.pagebreak {
+    margin: 20em;
+    height: 90vh;
+    margin: auto auto;
+}
+
+@media print {
+    .pagebreak {
+        page-break-after: always;
+    }
+}
+
+// Give article headings after page breaks some space
+.pagebreak > h1,h2,h3,h4,h5,h6 {
+    padding-top: 2vh;
+}
+
+.language-bash {
+    font-size: x-large;
+}
+
+p.mermaid {
+    background-color: ghostwhite;
+}
+
+details {
+    margin-bottom: 1em;
+}

@@ -1,0 +1,21 @@
+{{ $title := .Get "title" }}
+
+{{ if not (.Get "first") }}
+<a rel="noopener" class="book-btn prevSegment">
+  {{ $title | default "Back" }}
+</a>
+{{ end }}
+
+{{ if not (.Get "last") }}
+<a rel="noopener" class="book-btn nextSegment" style="position: absolute; right:0">
+  {{ $title | default "Next" }}
+</a>
+{{ end }}
+
+{{ with .Get "nextRef" }}
+<a href="{{. | urlize}}" class="book-btn" style="position: absolute; right:0">
+  {{ $title | default "Next" }}
+</a>
+{{ end }}
+
+<div class="pagebreak"></div>
