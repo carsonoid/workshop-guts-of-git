@@ -1,0 +1,33 @@
+<div class="nav-buttons">
+	{{ $next := .NextInSection }}
+	{{ if not $next }}
+		{{ if .Pages }}
+			{{ $next = index .Pages 0 }}
+		{{ else }}
+			{{$next = .Parent}}
+		{{ end }}
+	{{ end }}
+
+
+	{{ $prev := .PrevInSection }}
+	{{ if not $prev }}
+		{{/*  TODO: figure out how to get next section  */}}
+		{{ with .Parent }}
+		{{ range .Pages }}
+			{{ if .IsSection }}
+				{{ $prev = . }}
+			{{ end }}
+		{{ end }}
+		{{ end }}
+	{{ end }}
+
+	{{with $next}}
+		<a href="{{ .Permalink }}">« Previous {{ .LinkTitle | truncate 50 "..." | printf "(%s)" }}</a>
+	{{end}}
+	{{if and $next $prev}}
+		<span class="nav-buttons__separator">|</span>
+	{{end}}
+	{{with $prev}}
+		<a href="{{ .Permalink }}">Next {{ .LinkTitle | truncate 50 "..." | printf "(%s)" }} »</a>
+	{{end}}
+</div>

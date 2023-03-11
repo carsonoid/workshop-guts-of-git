@@ -1,0 +1,93 @@
+<script>
+    // find all the code tags with class="language-bash" and tweak the styles
+    var code = document.querySelectorAll("code.language-bash");
+    for (var i = 0; i < code.length; i++) {
+        var parent = code[i].parentElement;
+        // parse the current style attribute and add a new style
+        var style = parent.getAttribute("style");
+        if (style == null) {
+            style = "";
+        }
+        parent.setAttribute("style", style + ";font-size: large;border: 1px solid #404239; filter: drop-shadow(0 0 0.5rem #404239);");
+    }
+
+    // find all the code tags with class="language-txt" and tweak the styles
+    var code = document.querySelectorAll("code.language-txt");
+    for (var i = 0; i < code.length; i++) {
+        var parent = code[i].parentElement;
+        // parse the current style attribute and add a new style
+        var style = parent.getAttribute("style");
+        if (style == null) {
+            style = "";
+        }
+        parent.setAttribute("style", style + ";background-color: #f5f5f5; color: #333");
+
+        // find all the children of the code tag thta have a style attribute
+        var children = code[i].querySelectorAll("[style]");
+        // if they have a "background-color" in the style attribute, override it
+        for (var j = 0; j < children.length; j++) {
+            var childStyle = children[j].getAttribute("style");
+            if (childStyle.indexOf("background-color") > -1) {
+                console.log("found background-color");
+                childStyle = childStyle + ";background-color: #ddd; color: #333"
+                children[j].setAttribute("style", childStyle);
+            }
+        }
+    }
+
+    // find all elements with class "nextSegment" and attach a new click event to them
+    var nextSegment = document.getElementsByClassName("nextSegment");
+    for (var i = 0; i < nextSegment.length; i++) {
+        nextSegment[i].addEventListener("click", function() {
+            console.log("clicked");
+            // find the next div with class pagebreak
+            var next = this.nextElementSibling;
+            while (next) {
+                console.log(next);
+                if (next.classList.contains("pagebreak")) {
+                    // find the first heading after the div
+                    var heading = next.nextElementSibling;
+                    while (heading) {
+                        if (heading.tagName == "H1" || heading.tagName == "H2" || heading.tagName == "H3" || heading.tagName == "H4" || heading.tagName == "H5" || heading.tagName == "H6") {
+                            // scroll to the heading
+                            heading.scrollIntoView();
+                            // set the url hash to the heading id
+                            window.location.hash = heading.id;
+                            return;
+                        }
+                        heading = heading.nextElementSibling;
+                    }
+                }
+                next = next.nextElementSibling;
+            }
+        });
+    }
+
+    // find all elements with class "prevSegment" and attach a new click event to them
+    var prevSegment = document.getElementsByClassName("prevSegment");
+    for (var i = 0; i < prevSegment.length; i++) {
+        prevSegment[i].addEventListener("click", function() {
+            console.log("clicked");
+            // find the previous div with class pagebreak
+            var prev = this.previousElementSibling;
+            while (prev) {
+                console.log(prev);
+                if (prev.classList.contains("pagebreak")) {
+                    // find the first heading before the div
+                    var heading = prev.previousElementSibling;
+                    while (heading) {
+                        if (heading.tagName == "H1" || heading.tagName == "H2" || heading.tagName == "H3" || heading.tagName == "H4" || heading.tagName == "H5" || heading.tagName == "H6") {
+                            // scroll the heading to the top of the page
+                            heading.scrollIntoView();
+                            // set the url hash to the heading id
+                            window.location.hash = heading.id;
+                            return;
+                        }
+                        heading = heading.previousElementSibling;
+                    }
+                }
+                prev = prev.previousElementSibling;
+            }
+        });
+    }
+</script>
