@@ -192,7 +192,7 @@ We can dig into this file ourselves by using the `cat-file` sub-command.
 * The `-p` tells `cat-file` to guess the object type and pretty-print accordingly.
 
 ```bash
-git cat-file -p  88cbae6fb9b1ab364976238c1eb6871093ed3860
+git cat-file -p 88cbae6fb9b1ab364976238c1eb6871093ed3860
 ```
 
 In our case there is not much special here. What we see is just the exact content of the file we have staged:
@@ -238,6 +238,9 @@ git ls-files --stage
 mkdir assets
 curl -Lo assets/gopher.png \
    https://go.dev/doc/gopher/doc.png
+
+# if you don't have curl you can use wget
+# wget -O tmp/gopher.png https://go.dev/doc/gopher/doc.png
 
 git add assets
 ```
@@ -364,6 +367,33 @@ objects with different content and thus different hashes
 
 
 {{<                                                               page-break >}}
+#### New refs
+
+Along with adding the new objects we can also see that a few
+file has been created in the `refs` directory
+
+```bash
+tree -F .git/refs
+```
+
+```txt
+.git/refs
+├── heads/
+│   └── main
+└── tags/
+```
+
+What is in there? Just the hash of a git commit!
+
+```bash
+cat .git/refs/heads/main
+```
+
+```txt
+c71366be637024591f202876fbe5224b68f03199
+```
+
+{{<                                                               page-break >}}
 #### The commit object
 
 One of the 3 new files is the commit object. Git takes our commit information, builds a file and
@@ -381,8 +411,7 @@ git log --pretty=oneline
 c71366be637024591f202876fbe5224b68f03199 (HEAD -> main) Initial Add
 ```
 
-2. We can get the commit object hash by looking at the content of `.git/refs/heads/main`
-   > We will talk more about this file later
+2. Cat the ref
 
 ```bash
 cat .git/refs/heads/main
@@ -390,6 +419,12 @@ cat .git/refs/heads/main
 
 ```txt
 c71366be637024591f202876fbe5224b68f03199
+```
+
+3. Show the head commit
+
+```bash
+git show HEAD
 ```
 
 {{<                                                               page-break >}}
@@ -404,7 +439,7 @@ You can build this command yourself:
 git cat-file -p <hashhere>
 ```
 
-Or let the shell do it:
+Or let the shell do it by cating our refs file.
 
 ```bash
 git cat-file -p $(cat .git/refs/heads/main)
@@ -447,48 +482,6 @@ git cat-file -p <nestedtreehash>
 ```txt
 100644 blob e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b	gopher.png
 ```
-
-{{<                                                               page-break >}}
-### Other Changes
-
-Along with adding the new objects we can also see that a few
-file has been created in the `refs` directory
-
-```bash
-tree -F .git/refs
-```
-
-```txt
-.git/refs
-├── heads/
-│   └── main
-└── tags/
-```
-
-If we `cat` that file we can see that it is actually very simple
-
-```bash
-cat .git/refs/heads/main
-```
-
-```txt
-c71366be637024591f202876fbe5224b68f03199
-```
-
-We can use `cat-file` to show us exactly what this hash matches
-
-```bash
-git cat-file -p $(cat .git/refs/heads/main)
-```
-
-```txt
-tree a5c3a3648323f431095a32f4f5ea86885820b80a
-author Carson Anderson <user@email> 1666555792 -0600
-committer Carson Anderson <user@email> 1666555792 -0600
-
-Initial add
-```
-
 
 {{<                                                               page-break >}}
 #### Object Files
@@ -600,7 +593,7 @@ tree -F .git/refs
 The content is the exact same as our `refs/heads/main` ref
 
 ```bash
-head .git/refs/*/*
+tail .git/refs/*/*
 ```
 
 ```txt
@@ -945,7 +938,7 @@ Date:   Sun Oct 23 14:50:12 2022 -0600
 
     feat: add docs
 
-commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (tag: v0.0.1)
+commit 60f4c947db77f140bd16de41fb541725c8dacb8a (tag: v0.0.1)
 Author: Carson Anderson <user@email>
 Date:   Sun Oct 23 14:23:48 2022 -0600
 
