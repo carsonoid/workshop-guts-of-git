@@ -3,14 +3,17 @@ title: Introduction
 type: docs
 ---
 
-# Welcome!
+# https://guts-of-git.carson-anderson.com
 
-Here is where I tell you what you will find in this repo
+An interactive guide to digging into git operations and what they actually
+do.
 
 ## What you need
 
 * A relatively modern version of git
   * Older versions should work just fine but you may see `master` instead of `main` in many examples
+* The `tree` command
+* `curl` or `wget`
 
 ## What you do **not** need
 
