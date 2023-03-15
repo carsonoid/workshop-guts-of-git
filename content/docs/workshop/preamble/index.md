@@ -33,5 +33,3 @@ We use it so we can have full control and history over our code. This means we w
 * Metadata - Why (commit messages)?
 * Flow control - Add changes, Revert Changes, Update to latest
 * Conflict Resolution - Annoying, but absolutely essential
-
-{{< page-break first="true" last="true" nextRef="../fundamentals" title="Next Section" >}}
