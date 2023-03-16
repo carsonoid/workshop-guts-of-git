@@ -1,0 +1,4 @@
+This is one shared directory linked to multiple articles to make it easy to re-style
+all the diagrams in one place.
+
+The images here can be auto-generated with using a modern version of Inkscape on the `all-stacks.svg` file and the "Export Slices" extension.
