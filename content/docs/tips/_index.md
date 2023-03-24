@@ -24,7 +24,7 @@ git config --global alias.pr 'pull --rebase origin/main'
 ```
 
 You can of course add any aliases that you want. These new features will then
-be availabile from any repo and are independent of the shell you use.
+be available from any repo and are independent of the shell you use.
 
 ## Git Prompts
 
@@ -62,7 +62,7 @@ carson@weave /home/carson/tmp/myrepo [main {origin/main}↑·1|✔]
 carson@weave /home/carson/tmp/myrepo [main {origin/main}↓·3↑·1|✔]
 ```
 
-## Coventional Commits
+## Conventional Commits
 
 As you start to really understand git and hopefully embrace the use
 of `rebase -i` to keep pristine git histories it's often useful to standardize

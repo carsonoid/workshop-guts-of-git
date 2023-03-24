@@ -15,7 +15,7 @@ is actually doing inside the repo.
 ## Creating a New Repository
 
 It's time to start by making an empty Git repository. We do this by making
-a directory, chaning into it, and using `git init`
+a directory, changing into it, and using `git init`
 
 {{< tabs "setup-repo" >}}
 {{< tab "bash" >}}
@@ -266,7 +266,7 @@ This is one huge design aspect of git that you should internalize:
 ```
 
 This file is where `git` is now tracking the current state of your repo. This is
-how it knows that you stagged a `README.md` to be commited. But just knowing that the repo is staged
+how it knows that you staged a `README.md` to be committed. But just knowing that the repo is staged
 isn't quite enough. While this file is really only ever read by `git status` you can also manually query
 it for data:
 
@@ -397,7 +397,7 @@ Date:   Sun Oct 23 14:09:52 2022 -0600
     Initial add
 ```
 
-You can see that the log now shows us the commit we made, along with relevent
+You can see that the log now shows us the commit we made, along with relevant
 information about the commit.
 
 
@@ -775,7 +775,7 @@ type .git\refs\tags\v0.0.1
 In it's simplest form, yes! Although as a rule, you shouldn't edit files in `.git` other than the config.
 
 In this case you could quite easily
-accidentlly create a branch or tag that points to a bad target. But it *is* possible:
+accidentally create a branch or tag that points to a bad target. But it *is* possible:
 
 You can try it:
 
@@ -1215,7 +1215,7 @@ You should now have a pretty good grasp of the fundamentals of how git operates
 at a low level. Including:
 
 * How git stores files(blob objects) and directories(tree objects)
-* How git stores commmits(commit objects)
+* How git stores commits(commit objects)
 * How git stores tags and branches (pointer files)
 * The basic idea of what git `HEAD` is for
   * To point to a ref or commit
