@@ -19,7 +19,8 @@ the latest <code>main</code></p><p>The rest of this pages walks through pulling 
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=setup>Setup
 <a class=anchor href=#setup>#</a></h2><p>Let&rsquo;s start by setting up our test repo to a known state.</p><details><summary>Show Script</summary><div class=markdown-inner><p>You can simply click in the block below to copy the snippet and paste it into
 a terminal.</p><blockquote><p>WARNING: This will DELETE everything from <code>~/gitrepo</code> if either exists
-Make a backup if you want to keep work from that repo.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~
+Make a backup if you want to keep work from that repo.</p></blockquote><div class=book-tabs><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-0 checked>
+<label for=tabs-setup-repo-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>bash <span style=color:#e6db74>&lt;&lt;EOF
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>set -e
@@ -77,7 +78,58 @@ Make a backup if you want to keep work from that repo.</p></blockquote><div clas
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>cd ~/gitrepo
-</span></span></code></pre></div></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-1>
+<label for=tabs-setup-repo-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>cd</span> ..
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>rmdir</span> /S /Q gitrepo
+</span></span><span style=display:flex><span><span style=color:#66d9ef>mkdir</span> gitrepo
+</span></span><span style=display:flex><span><span style=color:#66d9ef>cd</span> gitrepo
+</span></span><span style=display:flex><span>git init
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;# My Git Repository&#34;</span> &gt; README.md
+</span></span><span style=display:flex><span>git add README.md
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>mkdir</span> assets
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;Gopher&#34;</span> &gt; assets\gopher.png
+</span></span><span style=display:flex><span>git add assets
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;Initial Add&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; api
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has an API&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add api&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git tag v0.0.1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git checkout -b topic
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; docs
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has Docs&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add docs&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;acls&#34;</span> &gt;&gt; api
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has ACLs&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add acls&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git checkout main
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; users
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has Users&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add users&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;refactored&#34;</span> &gt;&gt; api
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## API Refactored&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;refactor: api&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git checkout topic
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;======= Setup success! =======&#34;</span>
+</span></span></code></pre></div></div></div></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=check-the-two-logs>Check the two logs
 <a class=anchor href=#check-the-two-logs>#</a></h3><p>The log for <code>topic</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log topic --pretty<span style=color:#f92672>=</span>oneline
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>e4a3fc6118be3193724b4d44dd1c3e2361ceefb1 (HEAD -&gt; topic) feat: add acls

@@ -11,11 +11,19 @@ very basic git commands. While the commands themselves may not be anything new
 or special to you, we will be diving into the guts of <code>git</code> and what each command
 is actually doing inside the repo.</p><a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=creating-a-new-repository>Creating a New Repository
 <a class=anchor href=#creating-a-new-repository>#</a></h2><p>It&rsquo;s time to start by making an empty Git repository. We do this by making
-a directory, chaning into it, and using <code>git init</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir ~/gitrepo
+a directory, chaning into it, and using <code>git init</code></p><div class=book-tabs><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-0 checked>
+<label for=tabs-setup-repo-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir ~/gitrepo
 </span></span><span style=display:flex><span>cd ~/gitrepo
 </span></span><span style=display:flex><span>git init
-</span></span></code></pre></div><p>Ok, neat&mldr; so what did we actually do by when we ran <code>git init</code>? The truth is: not much!</p><p>That&rsquo;s right, all that actually happened was that <code>git</code> created a bunch of files and directories for us. It didn&rsquo;t need a server, it didn&rsquo;t need credentials, it didn&rsquo;t even need the network at all.</p><blockquote><p>Basically all that we did was get a <code>.git</code> directory created with some basic files in it.</p></blockquote><p>You can see the contents pretty easily using something like the <code>tree</code> command</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-1>
+<label for=tabs-setup-repo-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>mkdir</span> gitrepo
+</span></span><span style=display:flex><span><span style=color:#66d9ef>cd</span> gitrepo
+</span></span><span style=display:flex><span>git init
+</span></span></code></pre></div></div></div><p>Ok, neat&mldr; so what did we actually do by when we ran <code>git init</code>? The truth is: not much!</p><p>That&rsquo;s right, all that actually happened was that <code>git</code> created a bunch of files and directories for us. It didn&rsquo;t need a server, it didn&rsquo;t need credentials, it didn&rsquo;t even need the network at all.</p><blockquote><p>Basically all that we did was get a <code>.git</code> directory created with some basic files in it.</p></blockquote><p>You can see the contents pretty easily using something like the <code>tree</code> command</p><div class=book-tabs><input type=radio class=toggle name=tabs-tree-view1 id=tabs-tree-view1-0 checked>
+<label for=tabs-tree-view1-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-view1 id=tabs-tree-view1-1>
+<label for=tabs-tree-view1-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
 </span></span><span style=display:flex><span>├── branches/
 </span></span><span style=display:flex><span>├── config
 </span></span><span style=display:flex><span>├── description
@@ -45,11 +53,17 @@ a directory, chaning into it, and using <code>git init</code></p><div class=high
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=digging-around-in-git>Digging Around in <code>.git</code>
 <a class=anchor href=#digging-around-in-git>#</a></h2><p>Now that we have an empty repo, let&rsquo;s poke around a bit</p><h3 id=the-head-file>The <code>HEAD</code> file
-<a class=anchor href=#the-head-file>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/HEAD
-</span></span></code></pre></div><p>What do you see? For modern versions of <code>git</code> you actually will find very little in this file</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>ref: refs/heads/main
+<a class=anchor href=#the-head-file>#</a></h3><div class=book-tabs><input type=radio class=toggle name=tabs-view-head id=tabs-view-head-0 checked>
+<label for=tabs-view-head-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/HEAD
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-view-head id=tabs-view-head-1>
+<label for=tabs-view-head-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> .git\HEAD
+</span></span></code></pre></div></div></div><p>What do you see? For modern versions of <code>git</code> you actually will find very little in this file</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>ref: refs/heads/main
 </span></span></code></pre></div><h3 id=the-config-file>The <code>config</code> file
-<a class=anchor href=#the-config-file>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/config
-</span></span></code></pre></div><p>Another fairly simple file. Look closely and you will notice it&rsquo;s a fairly basic format. And a new repo typically has
+<a class=anchor href=#the-config-file>#</a></h3><div class=book-tabs><input type=radio class=toggle name=tabs-config-view id=tabs-config-view-0 checked>
+<label for=tabs-config-view-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/config
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-config-view id=tabs-config-view-1>
+<label for=tabs-config-view-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> .git\config
+</span></span></code></pre></div></div></div><p>Another fairly simple file. Look closely and you will notice it&rsquo;s a fairly basic format. And a new repo typically has
 very little in this file:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>[core]
 </span></span><span style=display:flex><span>	repositoryformatversion = 0
 </span></span><span style=display:flex><span>	filemode = true
@@ -83,8 +97,11 @@ very little in this file:</p><div class=highlight><pre tabindex=0 style=color:#f
 </span></span><span style=display:flex><span>	new file:   README.md
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=check-the-files>Check the files
-<a class=anchor href=#check-the-files>#</a></h3><p>What did that <code>git add</code> do? And how does <code>git status</code> know that there is a new file?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+<a class=anchor href=#check-the-files>#</a></h3><p>What did that <code>git add</code> do? And how does <code>git status</code> know that there is a new file?</p><div class=book-tabs><input type=radio class=toggle name=tabs-tree-view2 id=tabs-tree-view2-0 checked>
+<label for=tabs-tree-view2-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-view2 id=tabs-tree-view2-1>
+<label for=tabs-tree-view2-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
 </span></span><span style=display:flex><span>├── index
 </span></span><span style=display:flex><span>├── ... # omitted for space
 </span></span><span style=display:flex><span>├── objects/
@@ -114,7 +131,8 @@ it for data:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;backgro
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>100644 88cbae6fb9b1ab364976238c1eb6871093ed3860 0	README.md
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=add-more-content>Add More Content
-<a class=anchor href=#add-more-content>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir assets
+<a class=anchor href=#add-more-content>#</a></h3><div class=book-tabs><input type=radio class=toggle name=tabs-add-more-content id=tabs-add-more-content-0 checked>
+<label for=tabs-add-more-content-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir assets
 </span></span><span style=display:flex><span>curl -Lo assets/gopher.png <span style=color:#ae81ff>\
 </span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>   https://go.dev/doc/gopher/doc.png
 </span></span><span style=display:flex><span>
@@ -122,7 +140,11 @@ it for data:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;backgro
 </span></span><span style=display:flex><span><span style=color:#75715e># wget -O tmp/gopher.png https://go.dev/doc/gopher/doc.png</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>git add assets
-</span></span></code></pre></div><p>So this isn&rsquo;t that much different then what we did before. Except that we are
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-add-more-content id=tabs-add-more-content-1>
+<label for=tabs-add-more-content-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir assets
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Gopher&#34;</span> &gt; assets<span style=color:#ae81ff>\g</span>opher.png
+</span></span><span style=display:flex><span>git add assets
+</span></span></code></pre></div></div></div><p>So this isn&rsquo;t that much different then what we did before. Except that we are
 adding a non-text file to the repo. Again, we can check the result:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git status
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>On branch main
 </span></span><span style=display:flex><span>
@@ -135,8 +157,11 @@ adding a non-text file to the repo. Again, we can check the result:</p><div clas
 </span></span><span style=display:flex><span>	new file:   assets/gopher.png
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=dig-deeper>Dig Deeper
-<a class=anchor href=#dig-deeper>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
-</span></span></code></pre></div><p>Now, we can see another new object file alongside our other one. Like the first
+<a class=anchor href=#dig-deeper>#</a></h4><div class=book-tabs><input type=radio class=toggle name=tabs-tree-view3 id=tabs-tree-view3-0 checked>
+<label for=tabs-tree-view3-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-view3 id=tabs-tree-view3-1>
+<label for=tabs-tree-view3-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git
+</span></span></code></pre></div></div></div><p>Now, we can see another new object file alongside our other one. Like the first
 file, you should have this exact same object with the same hash in your <code>.git</code>.</p><p>That is because this file has the same content for everyone and all objects in git
 are stored by content hash!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git
 </span></span><span style=display:flex><span>├── ... # omitted for space
@@ -150,8 +175,11 @@ are stored by content hash!</p><div class=highlight><pre tabindex=0 style=color:
 </span></span><span style=display:flex><span>└── refs/
 </span></span><span style=display:flex><span>    ├── heads/
 </span></span><span style=display:flex><span>    └── tags/
-</span></span></code></pre></div><p>But what is inside it?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b |head -n1
-</span></span></code></pre></div><p>Again, the whole file! This is a binary file so our test command only shows one line
+</span></span></code></pre></div><p>But what is inside it?</p><div class=book-tabs><input type=radio class=toggle name=tabs-view-head id=tabs-view-head-0 checked>
+<label for=tabs-view-head-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b |head -n1
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-view-head id=tabs-view-head-1>
+<label for=tabs-view-head-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b
+</span></span></code></pre></div></div></div><p>Again, the whole file! This is a binary file so our test command only shows one line
 but you can see that the first line shows us that it is a <code>PNG</code> image</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>�PNG
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=commit>Commit
@@ -165,8 +193,11 @@ but you can see that the first line shows us that it is a <code>PNG</code> image
 </span></span></code></pre></div><p>You can see that the log now shows us the commit we made, along with relevent
 information about the commit.</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=dig-deeper-1>Dig Deeper
-<a class=anchor href=#dig-deeper-1>#</a></h3><p>So, what happened to our <code>.git</code>?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git
+<a class=anchor href=#dig-deeper-1>#</a></h3><p>So, what happened to our <code>.git</code>?</p><div class=book-tabs><input type=radio class=toggle name=tabs-tree-view4 id=tabs-tree-view4-0 checked>
+<label for=tabs-tree-view4-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-view4 id=tabs-tree-view4-1>
+<label for=tabs-tree-view4-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git
 </span></span><span style=display:flex><span>├── ... # omitted for space
 </span></span><span style=display:flex><span>├── objects/
 </span></span><span style=display:flex;background-color:#3c3d38><span>│   ├── 10/
@@ -191,27 +222,39 @@ Until now, we have all had the same objects. But your commit likely generated 3
 objects with different content and thus different hashes</blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=new-refs>New refs
 <a class=anchor href=#new-refs>#</a></h4><p>Along with adding the new objects we can also see that a few
-file has been created in the <code>refs</code> directory</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
+file has been created in the <code>refs</code> directory</p><div class=book-tabs><input type=radio class=toggle name=tabs-tree-refs-view id=tabs-tree-refs-view-0 checked>
+<label for=tabs-tree-refs-view-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-refs-view id=tabs-tree-refs-view-1>
+<label for=tabs-tree-refs-view-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /f .git\refs
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
 </span></span><span style=display:flex><span>├── heads/
 </span></span><span style=display:flex><span>│   └── main
 </span></span><span style=display:flex><span>└── tags/
-</span></span></code></pre></div><p>What is in there? Just the hash of a git commit!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
+</span></span></code></pre></div><p>What is in there? Just the hash of a git commit!</p><div class=book-tabs><input type=radio class=toggle name=tabs-view-heads-main id=tabs-view-heads-main-0 checked>
+<label for=tabs-view-heads-main-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-view-heads-main id=tabs-view-heads-main-1>
+<label for=tabs-view-heads-main-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> .git\refs\heads\main
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=the-commit-object>The commit object
 <a class=anchor href=#the-commit-object>#</a></h4><p>One of the 3 new files is the commit object. Git takes our commit information, builds a file and
 then hashes the content of that file and stores it as an object.</p><p>But wait, which of the 3 new objects is our commit object? Well, we can tell what it is one of two ways:</p><ol><li>We can get the commit object hash by looking at the log</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log --pretty<span style=color:#f92672>=</span>oneline
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199 (HEAD -&gt; main) Initial Add
-</span></span></code></pre></div><ol start=2><li>Cat the ref</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
+</span></span></code></pre></div><ol start=2><li>Cat the ref</li></ol><div class=book-tabs><input type=radio class=toggle name=tabs-view-heads-main2 id=tabs-view-heads-main2-0 checked>
+<label for=tabs-view-heads-main2-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat .git/refs/heads/main
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-view-heads-main2 id=tabs-view-heads-main2-1>
+<label for=tabs-view-heads-main2-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> .git\refs\heads\main
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>c71366be637024591f202876fbe5224b68f03199
 </span></span></code></pre></div><ol start=3><li>Show the head commit</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git show HEAD
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h5 id=show-the-commit-object>Show the commit object
 <a class=anchor href=#show-the-commit-object>#</a></h5><p>Now, no matter how we got that hash, we can now ask git to show us
 the raw content of the object as before.</p><p>You can build this command yourself:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p &lt;hashhere&gt;
-</span></span></code></pre></div><p>Or let the shell do it by cating our refs file.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>tree a5c3a3648323f431095a32f4f5ea86885820b80a
+</span></span></code></pre></div><p>Or let the shell do it by cating our refs file.</p><div class=book-tabs><input type=radio class=toggle name=tabs-git-cat-file id=tabs-git-cat-file-0 checked>
+<label for=tabs-git-cat-file-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-git-cat-file id=tabs-git-cat-file-1>
+<label for=tabs-git-cat-file-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>for</span> <span style=color:#66d9ef>/F</span> <span style=color:#e6db74>&#34;usebackq delims=&#34;</span> %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>tree a5c3a3648323f431095a32f4f5ea86885820b80a
 </span></span><span style=display:flex><span>author Carson Anderson &lt;user@email&gt; 1666555792 -0600
 </span></span><span style=display:flex><span>committer Carson Anderson &lt;user@email&gt; 1666555792 -0600
 </span></span><span style=display:flex><span>
@@ -236,11 +279,17 @@ to help reduce the number of tiny files it creates.</p></blockquote><a rel=noope
 <a class=anchor href=#non-object-files>#</a></h4><p>So what isn&rsquo;t an object?</p><ul><li>Branches</li><li>Tags</li></ul><p>As we have already seen, all the files in <code>.git/refs</code> are not objects but instead are simply
 pointers to commit objects.</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=another-commit>Another Commit
-<a class=anchor href=#another-commit>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch api
+<a class=anchor href=#another-commit>#</a></h2><div class=book-tabs><input type=radio class=toggle name=tabs-another-commit id=tabs-another-commit-0 checked>
+<label for=tabs-another-commit-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch api
 </span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has an API&#34;</span> &gt;&gt; README.md
 </span></span><span style=display:flex><span>git add .
 </span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add api&#34;</span>
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-another-commit id=tabs-another-commit-1>
+<label for=tabs-another-commit-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; api
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has an API&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add api&#34;</span>
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>commit 5b8b4cf7db77f140bd16de41fb541725c8dacb8a (HEAD -&gt; main)
 </span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
 </span></span><span style=display:flex><span>Date:   Sun Oct 23 14:23:48 2022 -0600
@@ -254,8 +303,11 @@ pointers to commit objects.</p><a rel=noopener class="book-btn prevSegment">Back
 </span></span><span style=display:flex><span>    Initial add
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=parent-pointers>Parent Pointers
-<a class=anchor href=#parent-pointers>#</a></h3><p>We can now have git show us the latest commit content as before</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>tree d3d6344e952d73a8f8a33cab518ef1a1b13d44c7
+<a class=anchor href=#parent-pointers>#</a></h3><p>We can now have git show us the latest commit content as before</p><div class=book-tabs><input type=radio class=toggle name=tabs-git-cat-file2 id=tabs-git-cat-file2-0 checked>
+<label for=tabs-git-cat-file2-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-git-cat-file2 id=tabs-git-cat-file2-1>
+<label for=tabs-git-cat-file2-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>for</span> <span style=color:#66d9ef>/F</span> <span style=color:#e6db74>&#34;usebackq delims=&#34;</span> %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>tree d3d6344e952d73a8f8a33cab518ef1a1b13d44c7
 </span></span><span style=display:flex;background-color:#3c3d38><span>parent c71366be637024591f202876fbe5224b68f03199
 </span></span><span style=display:flex><span>author Carson Anderson &lt;user@email&gt; 1666556628 -0600
 </span></span><span style=display:flex><span>committer Carson Anderson &lt;user@email&gt; 1666556628 -0600
@@ -267,14 +319,21 @@ pointers to commit objects.</p><a rel=noopener class="book-btn prevSegment">Back
 8f03199["feat: add api"] --> 8dacb8a["Initial add"]</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=tags>Tags
 <a class=anchor href=#tags>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git tag v0.0.1
-</span></span></code></pre></div><p>Now we can see that all we did was make a new tag file in <code>.git/refs/tags</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
+</span></span></code></pre></div><p>Now we can see that all we did was make a new tag file in <code>.git/refs/tags</code></p><div class=book-tabs><input type=radio class=toggle name=tabs-tree-refs-view2 id=tabs-tree-refs-view2-0 checked>
+<label for=tabs-tree-refs-view2-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-refs-view2 id=tabs-tree-refs-view2-1>
+<label for=tabs-tree-refs-view2-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git\refs
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs
 </span></span><span style=display:flex><span>├── heads/
 </span></span><span style=display:flex><span>│   └── main
 </span></span><span style=display:flex><span>└── tags/
 </span></span><span style=display:flex;background-color:#3c3d38><span>    └── v0.0.1
-</span></span></code></pre></div><p>The content is the exact same as our <code>refs/heads/main</code> ref</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tail .git/refs/*/*
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>==&gt; .git/refs/heads/main &lt;==
+</span></span></code></pre></div><p>The content is the exact same as our <code>refs/heads/main</code> ref</p><div class=book-tabs><input type=radio class=toggle name=tabs-tail-view id=tabs-tail-view-0 checked>
+<label for=tabs-tail-view-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tail .git/refs/*/*
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tail-view id=tabs-tail-view-1>
+<label for=tabs-tail-view-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>type .git<span style=color:#ae81ff>\r</span>efs<span style=color:#ae81ff>\h</span>eads<span style=color:#ae81ff>\m</span>ain
+</span></span><span style=display:flex><span>type .git<span style=color:#ae81ff>\r</span>efs<span style=color:#ae81ff>\t</span>ags<span style=color:#ae81ff>\v</span>0.0.1
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>==&gt; .git/refs/heads/main &lt;==
 </span></span><span style=display:flex><span>5b8b4cf7db77f140bd16de41fb541725c8dacb8a
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>==&gt; .git/refs/tags/v0.0.1 &lt;==
@@ -313,8 +372,11 @@ by content in <code>.git/objects</code> The other defining attribute is that cre
 branch it git is <strong>easy</strong> and <strong>cheap</strong>!</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=create-a-branch>Create A Branch
 <a class=anchor href=#create-a-branch>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout -b topic
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs/
+</span></span></code></pre></div><div class=book-tabs><input type=radio class=toggle name=tabs-tree-ref-view4 id=tabs-tree-ref-view4-0 checked>
+<label for=tabs-tree-ref-view4-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tree -F .git/refs
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-tree-ref-view4 id=tabs-tree-ref-view4-1>
+<label for=tabs-tree-ref-view4-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>tree /F .git\refs
+</span></span></code></pre></div></div></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>.git/refs/
 </span></span><span style=display:flex><span>├── heads/
 </span></span><span style=display:flex><span>│   ├── main
 </span></span><span style=display:flex;background-color:#3c3d38><span>│   └── topic
@@ -322,11 +384,17 @@ branch it git is <strong>easy</strong> and <strong>cheap</strong>!</p><a rel=noo
 </span></span><span style=display:flex><span>    └── v0.0.1
 </span></span></code></pre></div><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=commit-to-topic>Commit to <code>topic</code>
-<a class=anchor href=#commit-to-topic>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch users
+<a class=anchor href=#commit-to-topic>#</a></h3><div class=book-tabs><input type=radio class=toggle name=tabs-add-users id=tabs-add-users-0 checked>
+<label for=tabs-add-users-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>touch users
 </span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has Users&#34;</span> &gt;&gt; README.md
 </span></span><span style=display:flex><span>git add .
 </span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add users&#34;</span>
-</span></span></code></pre></div><p>Now let&rsquo;s inspect it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-add-users id=tabs-add-users-1>
+<label for=tabs-add-users-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; users
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has Users&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add users&#34;</span>
+</span></span></code></pre></div></div></div><p>Now let&rsquo;s inspect it:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
 </span></span></code></pre></div><p>Notice two things</p><ol><li>The <code>head -> topic</code> decoration has moved with our new commit</li><li>The <code>tag: v0.0.1,</code> and <code>main</code> decorations are still attached to the previous commit</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>commit 60f4c94a3c4f7af884bdd8d5726fbbca8cdcbdae (HEAD -&gt; topic)
 </span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
 </span></span><span style=display:flex><span>Date:   Sun Oct 23 14:42:37 2022 -0600
@@ -360,13 +428,21 @@ commit id: "feat: add users"</p><details><summary>About the git diagrams</summar
 are easier to read, but it could give you the impression that git can walk forward from
 a commit to tell you all the commits after it. When in reality, this is not how the system works.</p><p>Commits have one or more parents. While you could do a lot of work to try and find all the commits that point to a specific parent, it is not a standard use-case for git and not easy to do</p></div></details><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=diverging-the-main-branch>Diverging the <code>main</code> branch
-<a class=anchor href=#diverging-the-main-branch>#</a></h2><p>Now let&rsquo;s go <strong>back</strong> to main and have it make some parallel changes</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout main
+<a class=anchor href=#diverging-the-main-branch>#</a></h2><p>Now let&rsquo;s go <strong>back</strong> to main and have it make some parallel changes</p><div class=book-tabs><input type=radio class=toggle name=tabs-add-docs id=tabs-add-docs-0 checked>
+<label for=tabs-add-docs-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git checkout main
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>touch docs.md
 </span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;## Has Docs&#34;</span> &gt;&gt; README.md
 </span></span><span style=display:flex><span>git add .
 </span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add docs&#34;</span>
-</span></span></code></pre></div><p>We can check the log again.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-add-docs id=tabs-add-docs-1>
+<label for=tabs-add-docs-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>git checkout main
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> nul &gt; docs.md
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;## Has Docs&#34;</span> &gt;&gt; README.md
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;feat: add docs&#34;</span>
+</span></span></code></pre></div></div></div><p>We can check the log again.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git log
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex;background-color:#3c3d38><span>commit c2d71219e98d8bbd1240e3aa820b32659ad5045c (HEAD -&gt; main)
 </span></span><span style=display:flex><span>Author: Carson Anderson &lt;user@email&gt;
 </span></span><span style=display:flex><span>Date:   Sun Oct 23 14:50:12 2022 -0600
@@ -412,7 +488,8 @@ around them in the branching section. But the short version is that our two
 branches each have different ideas of what <code>README.md</code> should look like.</p><p><code>git</code> is actually pretty good at reconciling this situation in most cases. But
 in our case, each branch thinks line 3 should have different content and there is
 no clear winner. So Git stops the merge and asks us to solve the problem.</p><p>For now we are going to manually set the content of <code>README.md</code>
-and complete the merge.</p><blockquote><p>You can just save and close the editor prompt that comes up.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat &gt; README.md <span style=color:#e6db74>&lt;&lt;EOL
+and complete the merge.</p><blockquote><p>You can just save and close the editor prompt that comes up.</p></blockquote><div class=book-tabs><input type=radio class=toggle name=tabs-manual-merge id=tabs-manual-merge-0 checked>
+<label for=tabs-manual-merge-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cat &gt; README.md <span style=color:#e6db74>&lt;&lt;EOL
 </span></span></span><span style=display:flex><span><span style=color:#e6db74># My Git Repository
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>## Has an API
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>## Has Docs
@@ -421,7 +498,15 @@ and complete the merge.</p><blockquote><p>You can just save and close the editor
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>git add .
 </span></span><span style=display:flex><span>git commit
-</span></span></code></pre></div><p>This leaves us with a final git state like this:</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-manual-merge id=tabs-manual-merge-1>
+<label for=tabs-manual-merge-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span>(<span style=color:#66d9ef>echo</span> # My Git Repository
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> ## Has an API
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> ## Has Docs
+</span></span><span style=display:flex><span><span style=color:#66d9ef>echo</span> ## Has Users) &gt; readme.md
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git add .
+</span></span><span style=display:flex><span>git commit
+</span></span></code></pre></div></div></div><p>This leaves us with a final git state like this:</p><p class=mermaid>%%{init: { 'theme': 'neutral' } }%%
 gitGraph
 commit id: "Initial add" tag: "v0.0.1"
 commit id: "feat: add api"
@@ -464,8 +549,11 @@ in the <a href=../branching>Branching</a> section.</p><a rel=noopener class="boo
 aren&rsquo;t just adding the changes. Your are actually creating a commit
 where you combine the two histories.</p><blockquote><p>We go into more detail later in the <a href=../branching>Branching</a> section.</p></blockquote><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=the-merge-commit>The &ldquo;merge commit&rdquo;
-<a class=anchor href=#the-merge-commit>#</a></h3><p>Just like before, let&rsquo;s look at the raw contents of our latest commit</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
-</span></span></code></pre></div><p>Notice we now have <strong>two</strong> parent hashes in the commit. This
+<a class=anchor href=#the-merge-commit>#</a></h3><p>Just like before, let&rsquo;s look at the raw contents of our latest commit</p><div class=book-tabs><input type=radio class=toggle name=tabs-git-cat-file3 id=tabs-git-cat-file3-0 checked>
+<label for=tabs-git-cat-file3-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>git cat-file -p <span style=color:#66d9ef>$(</span>cat .git/refs/heads/main<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-git-cat-file3 id=tabs-git-cat-file3-1>
+<label for=tabs-git-cat-file3-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>for</span> <span style=color:#66d9ef>/F</span> <span style=color:#e6db74>&#34;usebackq delims=&#34;</span> %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+</span></span></code></pre></div></div></div><p>Notice we now have <strong>two</strong> parent hashes in the commit. This
 is where <code>git log</code> got those short hashes.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-txt data-lang=txt><span style=display:flex><span>tree 9521bc081dd964a77a02f756bb52892d00379f07
 </span></span><span style=display:flex;background-color:#3c3d38><span>parent 11e86be1b4ae2bee490d8c51bb6dcbb597964f35
 </span></span><span style=display:flex;background-color:#3c3d38><span>parent b94c70770fc56ff85874eaa43165821403bb4729

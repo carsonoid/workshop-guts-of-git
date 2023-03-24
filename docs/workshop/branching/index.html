@@ -13,8 +13,11 @@ each one starts with a script to get you to a known starting state.</p><a rel=no
 <a class=anchor href=#tip-preventing-data-loss>#</a></h2><p>A vast majority of git commands are non-destructive. Most things you do can be undone. But
 when dealing with complex branch operations or other unfamiliar commands you may want to
 take extra precautions to prevent data loss</p><p>With that in mind, below you will find my #1 tip for protecting yourself when you
-are doing things that are scary in git:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cp -rp ./my-repo ./my-repo.bak
-</span></span></code></pre></div><p>Ok, so it&rsquo;s just a copy. Not very fancy or effecient but it works. As you become more familiar with git you might not do this as often. But when in doubt, take a few seconds nad make a backup. Then no matter what you do you can recover.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+are doing things that are scary in git:</p><div class=book-tabs><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-0 checked>
+<label for=tabs-setup-repo-0>bash</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cp -rp ./my-repo ./my-repo.bak
+</span></span></code></pre></div></div><input type=radio class=toggle name=tabs-setup-repo id=tabs-setup-repo-1>
+<label for=tabs-setup-repo-1>windows</label><div class="book-tabs-content markdown-inner"><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd><span style=display:flex><span><span style=color:#66d9ef>copy</span> my-repo my-repo.bak
+</span></span></code></pre></div></div></div><p>Ok, so it&rsquo;s just a copy. Not very fancy or effecient but it works. As you become more familiar with git you might not do this as often. But when in doubt, take a few seconds nad make a backup. Then no matter what you do you can recover.</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h2 id=tip-kinds-of-git-diagrams>Tip: Kinds of Git Diagrams
 <a class=anchor href=#tip-kinds-of-git-diagrams>#</a></h2><p>So far we have seen and used 2 kinds of git diagrams. But the exercises in this
 section are going to use a 3rd.</p><h3 id=traditional-diagrams>Traditional Diagrams
