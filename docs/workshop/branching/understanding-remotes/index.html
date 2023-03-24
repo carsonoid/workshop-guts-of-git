@@ -77,7 +77,7 @@ all the commits that came before. It really isn&rsquo;t much more than a <code>g
 <a class=anchor href=#the-head-at-stored-in-our-remote>#</a></h6><p>The repo starting from the commit pointed to by the contents of <code>refs/heads/main</code>
 as it currently exists in the remote.</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h3 id=update-the-remote>Update the remote
-<a class=anchor href=#update-the-remote>#</a></h3><p>Let&rsquo;s simulate somone updating <code>main</code> on the remote.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~/gitrepo
+<a class=anchor href=#update-the-remote>#</a></h3><p>Let&rsquo;s simulate someone updating <code>main</code> on the remote.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd ~/gitrepo
 </span></span><span style=display:flex><span>git checkout main
 </span></span><span style=display:flex><span>touch <span style=color:#e6db74>&#34;users&#34;</span>
 </span></span><span style=display:flex><span>git add users
@@ -85,7 +85,7 @@ as it currently exists in the remote.</p><a rel=noopener class="book-btn prevSeg
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>cd ~/myclone
 </span></span></code></pre></div><p>The snippet above emulates another user pushing new code to <code>main</code>. It&rsquo;s the
-local repo equivilent of someone else pushing new code to a remote server like GitHub.</p><a rel=noopener class="book-btn prevSegment">Back</a>
+local repo equivalent of someone else pushing new code to a remote server like GitHub.</p><a rel=noopener class="book-btn prevSegment">Back</a>
 <a rel=noopener class="book-btn nextSegment" style=position:absolute;right:0>Next</a><div class=pagebreak></div><h4 id=meanwhile-in-myclone>Meanwhile in <code>~/myclone</code>
 <a class=anchor href=#meanwhile-in-myclone>#</a></h4><p>You will notice in our diagram that while we just added a new commit to the remote
 absolutely nothing has changed in our local repo. Both <code>main</code> and <code>origin/main</code> are unaware of the new commit.</p><figure><img src=stack-diagrams/s3.png></figure><a rel=noopener class="book-btn prevSegment">Back</a>
