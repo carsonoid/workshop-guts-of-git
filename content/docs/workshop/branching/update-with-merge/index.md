@@ -39,6 +39,8 @@ a terminal.
 > WARNING: This will DELETE everything from `~/gitrepo` if either exists
 > Make a backup if you want to keep work from that repo.
 
+{{< tabs "setup-repo" >}}
+{{< tab "bash" >}}
 ```bash
 cd ~
 
@@ -99,6 +101,64 @@ EOF
 
 cd ~/gitrepo
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+cd ..
+
+rmdir /S /Q gitrepo
+mkdir gitrepo
+cd gitrepo
+git init
+
+echo "# My Git Repository" > README.md
+git add README.md
+
+mkdir assets
+echo "Gopher" > assets\gopher.png
+git add assets
+
+git commit -m "Initial Add"
+
+type nul > api
+echo "## Has an API" >> README.md
+git add .
+git commit -m "feat: add api"
+
+git tag v0.0.1
+
+git checkout -b topic
+
+type nul > docs
+git add .
+echo "## Has Docs" >> README.md
+git commit -m "feat: add docs"
+
+echo "acls" >> api
+echo "## Has ACLs" >> README.md
+git add .
+git commit -m "feat: add acls"
+
+git checkout main
+
+type nul > users
+echo "## Has Users" >> README.md
+git add .
+git commit -m "feat: add users"
+
+echo "refactored" >> api
+echo "## API Refactored" >> README.md
+git add .
+git commit -m "refactor: api"
+
+git checkout topic
+
+echo "======= Setup success! ======="
+
+```
+{{< /tab >}}
+{{< /tabs >}}
+
 {{< /details >}}
 
 {{<                                                               page-break >}}
