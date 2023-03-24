@@ -21,9 +21,18 @@ take extra precautions to prevent data loss
 With that in mind, below you will find my #1 tip for protecting yourself when you
 are doing things that are scary in git:
 
+{{< tabs "setup-repo" >}}
+{{< tab "bash" >}}
 ```bash
 cp -rp ./my-repo ./my-repo.bak
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+copy my-repo my-repo.bak
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Ok, so it's just a copy. Not very fancy or effecient but it works. As you become more familiar with git you might not do this as often. But when in doubt, take a few seconds nad make a backup. Then no matter what you do you can recover.
 

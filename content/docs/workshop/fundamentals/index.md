@@ -17,11 +17,22 @@ is actually doing inside the repo.
 It's time to start by making an empty Git repository. We do this by making
 a directory, chaning into it, and using `git init`
 
+{{< tabs "setup-repo" >}}
+{{< tab "bash" >}}
 ```bash
 mkdir ~/gitrepo
 cd ~/gitrepo
 git init
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+ ```cmd
+mkdir gitrepo
+cd gitrepo
+git init
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Ok, neat... so what did we actually do by when we ran `git init`? The truth is: not much!
 
@@ -31,9 +42,18 @@ That's right, all that actually happened was that `git` created a bunch of files
 
 You can see the contents pretty easily using something like the `tree` command
 
+{{< tabs "tree-view1" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 .git
@@ -72,9 +92,18 @@ Now that we have an empty repo, let's poke around a bit
 
 ### The `HEAD` file
 
+{{< tabs "view-head" >}}
+{{< tab "bash" >}}
 ```bash
 cat .git/HEAD
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type .git\HEAD
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 What do you see? For modern versions of `git` you actually will find very little in this file
 
@@ -84,9 +113,18 @@ ref: refs/heads/main
 
 ### The `config` file
 
+{{< tabs "config-view" >}}
+{{< tab "bash" >}}
 ```bash
 cat .git/config
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type .git\config
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Another fairly simple file. Look closely and you will notice it's a fairly basic format. And a new repo typically has
 very little in this file:
@@ -153,9 +191,18 @@ Changes to be committed:
 
 What did that `git add` do? And how does `git status` know that there is a new file?
 
+{{< tabs "tree-view2" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 .git
@@ -234,6 +281,8 @@ git ls-files --stage
 {{<                                                               page-break >}}
 ### Add More Content
 
+{{< tabs "add-more-content" >}}
+{{< tab "bash" >}}
 ```bash
 mkdir assets
 curl -Lo assets/gopher.png \
@@ -244,6 +293,15 @@ curl -Lo assets/gopher.png \
 
 git add assets
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```bash
+mkdir assets
+echo "Gopher" > assets\gopher.png
+git add assets
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 So this isn't that much different then what we did before. Except that we are
 adding a non-text file to the repo. Again, we can check the result:
@@ -267,9 +325,18 @@ Changes to be committed:
 {{<                                                               page-break >}}
 #### Dig Deeper
 
+{{< tabs "tree-view3" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Now, we can see another new object file alongside our other one. Like the first
 file, you should have this exact same object with the same hash in your `.git`.
@@ -294,9 +361,18 @@ are stored by content hash!
 
 But what is inside it?
 
+{{< tabs "view-head" >}}
+{{< tab "bash" >}}
 ```bash
 git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b |head -n1
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+git cat-file -p e15a3234d5d2c87e4e6afc226d971e8ab0c65d2b
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Again, the whole file! This is a binary file so our test command only shows one line
 but you can see that the first line shows us that it is a `PNG` image
@@ -330,9 +406,18 @@ information about the commit.
 
 So, what happened to our `.git`?
 
+{{< tabs "tree-view4" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt {hl_lines=["4-5","8-11"]}
 .git
@@ -372,9 +457,20 @@ objects with different content and thus different hashes
 Along with adding the new objects we can also see that a few
 file has been created in the `refs` directory
 
+
+{{< tabs "tree-refs-view" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git/refs
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /f .git\refs
+```
+{{< /tab >}}
+{{< /tabs >}}
+
 
 ```txt
 .git/refs
@@ -385,9 +481,18 @@ tree -F .git/refs
 
 What is in there? Just the hash of a git commit!
 
+{{< tabs "view-heads-main" >}}
+{{< tab "bash" >}}
 ```bash
 cat .git/refs/heads/main
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type .git\refs\heads\main
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 c71366be637024591f202876fbe5224b68f03199
@@ -413,9 +518,18 @@ c71366be637024591f202876fbe5224b68f03199 (HEAD -> main) Initial Add
 
 2. Cat the ref
 
+{{< tabs "view-heads-main2" >}}
+{{< tab "bash" >}}
 ```bash
 cat .git/refs/heads/main
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type .git\refs\heads\main
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 c71366be637024591f202876fbe5224b68f03199
@@ -441,9 +555,18 @@ git cat-file -p <hashhere>
 
 Or let the shell do it by cating our refs file.
 
+{{< tabs "git-cat-file" >}}
+{{< tab "bash" >}}
 ```bash
 git cat-file -p $(cat .git/refs/heads/main)
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+for /F "usebackq delims=" %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 tree a5c3a3648323f431095a32f4f5ea86885820b80a
@@ -512,12 +635,26 @@ pointers to commit objects.
 {{<                                                               page-break >}}
 ## Another Commit
 
+{{< tabs "another-commit" >}}
+{{< tab "bash" >}}
 ```bash
 touch api
 echo "## Has an API" >> README.md
 git add .
 git commit -m "feat: add api"
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type nul > api
+echo "## Has an API" >> README.md
+git add .
+git commit -m "feat: add api"
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+
 
 ```bash
 git log
@@ -542,9 +679,18 @@ Date:   Sun Oct 23 14:09:52 2022 -0600
 
 We can now have git show us the latest commit content as before
 
+{{< tabs "git-cat-file2" >}}
+{{< tab "bash" >}}
 ```bash
 git cat-file -p $(cat .git/refs/heads/main)
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+for /F "usebackq delims=" %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt {hl_lines=[2]}
 tree d3d6344e952d73a8f8a33cab518ef1a1b13d44c7
@@ -578,9 +724,18 @@ git tag v0.0.1
 
 Now we can see that all we did was make a new tag file in `.git/refs/tags`
 
+{{< tabs "tree-refs-view2" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git/refs
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git\refs
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt {hl_lines=[5]}
 .git/refs
@@ -592,9 +747,19 @@ tree -F .git/refs
 
 The content is the exact same as our `refs/heads/main` ref
 
+{{< tabs "tail-view" >}}
+{{< tab "bash" >}}
 ```bash
 tail .git/refs/*/*
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```bash
+type .git\refs\heads\main
+type .git\refs\tags\v0.0.1
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt
 ==> .git/refs/heads/main <==
@@ -678,9 +843,18 @@ branch it git is **easy** and **cheap**!
 git checkout -b topic
 ```
 
+{{< tabs "tree-ref-view4" >}}
+{{< tab "bash" >}}
 ```bash
 tree -F .git/refs
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+tree /F .git\refs
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 ```txt {hl_lines=[4]}
 .git/refs/
@@ -694,12 +868,24 @@ tree -F .git/refs
 {{<                                                               page-break >}}
 ### Commit to `topic`
 
+{{< tabs "add-users" >}}
+{{< tab "bash" >}}
 ```bash
 touch users
 echo "## Has Users" >> README.md
 git add .
 git commit -m "feat: add users"
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+type nul > users
+echo "## Has Users" >> README.md
+git add .
+git commit -m "feat: add users"
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Now let's inspect it:
 
@@ -774,6 +960,8 @@ Commits have one or more parents. While you could do a lot of work to try and fi
 
 Now let's go **back** to main and have it make some parallel changes
 
+{{< tabs "add-docs" >}}
+{{< tab "bash" >}}
 ```bash
 git checkout main
 
@@ -782,6 +970,18 @@ echo "## Has Docs" >> README.md
 git add .
 git commit -m "feat: add docs"
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+git checkout main
+
+type nul > docs.md
+echo "## Has Docs" >> README.md
+git add .
+git commit -m "feat: add docs"
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 We can check the log again.
 
@@ -879,6 +1079,8 @@ and complete the merge.
 
 > You can just save and close the editor prompt that comes up.
 
+{{< tabs "manual-merge" >}}
+{{< tab "bash" >}}
 ```bash
 cat > README.md <<EOL
 # My Git Repository
@@ -890,6 +1092,19 @@ EOL
 git add .
 git commit
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+(echo # My Git Repository
+echo ## Has an API
+echo ## Has Docs
+echo ## Has Users) > readme.md
+
+git add .
+git commit
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 This leaves us with a final git state like this:
 
@@ -963,9 +1178,18 @@ where you combine the two histories.
 
 Just like before, let's look at the raw contents of our latest commit
 
+{{< tabs "git-cat-file3" >}}
+{{< tab "bash" >}}
 ```bash
 git cat-file -p $(cat .git/refs/heads/main)
 ```
+{{< /tab >}}
+{{< tab "windows" >}}
+```cmd
+for /F "usebackq delims=" %A in (`type .git\refs\heads\main`) do git cat-file -p %A
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 
 Notice we now have **two** parent hashes in the commit. This
