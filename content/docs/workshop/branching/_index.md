@@ -8,7 +8,7 @@ bookCollapseSection: true
 
 This section builds on the previous [Git Fundamentals]({{< ref "../fundamentals" >}}) section.
 
-If you have not done that section you should still be able to do all the excercies here since
+If you have not done that section you should still be able to do all the exercises here since
 each one starts with a script to get you to a known starting state.
 
 {{<                                                               page-break >}}
@@ -34,7 +34,7 @@ copy my-repo my-repo.bak
 {{< /tab >}}
 {{< /tabs >}}
 
-Ok, so it's just a copy. Not very fancy or effecient but it works. As you become more familiar with git you might not do this as often. But when in doubt, take a few seconds nad make a backup. Then no matter what you do you can recover.
+Ok, so it's just a copy. Not very fancy or efficient but it works. As you become more familiar with git you might not do this as often. But when in doubt, take a few seconds nad make a backup. Then no matter what you do you can recover.
 
 {{<                                                               page-break >}}
 ## Tip: Kinds of Git Diagrams

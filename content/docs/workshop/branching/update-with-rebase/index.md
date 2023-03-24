@@ -8,7 +8,7 @@ bookCollapseSection: false
 
 This section builds on the previous [Git Fundamentals]({{< ref "../../fundamentals" >}}) section.
 
-If you have not done that section you should still be able to do all the excercies here since
+If you have not done that section you should still be able to do all the exercises here since
 each one starts with a script to get you to a known starting state.
 
 {{<                                                               page-break >}}

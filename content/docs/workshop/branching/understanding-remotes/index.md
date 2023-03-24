@@ -154,7 +154,7 @@ as it currently exists in the remote.
 {{<                                                               page-break >}}
 ### Update the remote
 
-Let's simulate somone updating `main` on the remote.
+Let's simulate someone updating `main` on the remote.
 
 ```bash
 cd ~/gitrepo
@@ -167,7 +167,7 @@ cd ~/myclone
 ```
 
 The snippet above emulates another user pushing new code to `main`. It's the
-local repo equivilent of someone else pushing new code to a remote server like GitHub.
+local repo equivalent of someone else pushing new code to a remote server like GitHub.
 
 
 {{<                                                               page-break >}}

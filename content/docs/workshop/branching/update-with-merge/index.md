@@ -8,7 +8,7 @@ bookCollapseSection: false
 
 This section builds on the previous [Git Fundamentals]({{< ref "../../fundamentals" >}}) section.
 
-If you have not done that section you should still be able to do all the excercies here since
+If you have not done that section you should still be able to do all the exercises here since
 each one starts with a script to get you to a known starting state.
 
 {{<                                                               page-break >}}
@@ -514,7 +514,7 @@ these merges.
 {{<                                                               page-break >}}
 ##### Pro: All of the original commits are untouched
 
-We have tracked every single commited state of our repo
+We have tracked every single committed state of our repo
 which means we could easily inspect the repo before and after our
 merge commit.
 
@@ -560,7 +560,7 @@ This is a big one: No matter how you do it, when you `git merge`
 you only ever have to solve merge conflicts once. That is
 because git only ever tries to merge two states together.
 
-This means that even though we have to solve conflicst, we only ever
+This means that even though we have to solve conflicts, we only ever
 do it once per execution of the command. The same is not true of other methods
 like `rebase`
 
