@@ -92,7 +92,7 @@ Now that we have an empty repo, let's poke around a bit
 
 ### The `HEAD` file
 
-{{< tabs "view-head" >}}
+{{< tabs >}}
 {{< tab "bash" >}}
 ```bash
 cat .git/HEAD
